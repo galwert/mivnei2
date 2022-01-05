@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.cpp
+DynamicArray.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/main.cpp
+iostream
+-
+DynamicArray.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
+cassert
+-
+
