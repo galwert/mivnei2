@@ -2,7 +2,7 @@
 #define _UNION_FIND_H_
 
 
-
+#include "Exceptions.h"
 
 namespace Ehsan
 {
@@ -27,7 +27,9 @@ namespace Ehsan
         //should I delete copy c'tor && operator=
         //the make(i) method that we saw in class is manually done at the beginning
         int Find(int i);
-        void Union(T& p,T& q);
+        void increasesize(int group_id, int increase = 1);
+        void Merge(T& to_grow,int to_grow_index, T& to_delete,int to_delete_index);
+        void Union(int p,int q);
     };
     
     template<class T>
@@ -40,7 +42,7 @@ namespace Ehsan
         for (int i = 0; i < (numberOfElements+1) ; i++)
         {
             parent[i] = i;//parent[0] is abandoned.
-            size[i] = 1;
+            size[i] = 0; // should it be one?
         }
     }
     
@@ -54,46 +56,91 @@ namespace Ehsan
     template<class T>
     int UnionFind<T>::Find(int i)
     {
+        //check that the group is legal
         if ( i < 1 || i >= numberOfElements)// is : 1 <= groupID < k ?
         {
-            //throw GroupDoesntExist();
-            //return -1;?
+            throw GroupDoesntExist();
         }
-        int current = 0;
 
+        //find the main parent of i
+        int current = i;
         while (current != parent[current])
         {
             current = parent[current];
         }
 
-        return current;
+        //shrinking paths
+        int root = current;
+        current = i;
+        while (current != parent[current])
+        {
+            int old_parent = parent[current];
+            parent[current] = root;
+            current = parent[old_parent];
+        }
+
+        return root;
     }
 
     template<class T>
-    void UnionFind<T>::Union(T& p, T& q)
+    void UnionFind<T>::increasesize(int group_id, int increase = 1)
     {
-        T& group_1 = data[Find(q)];
-        T& group_2 = data[Find(p)];
-        if (group_1 == group_2)
+        int root = Find(group);
+        size[root] += increase;
+        return;
+    }
+
+    template<class T>
+    void UnionFind<T>::Merge(T& to_grow,int to_grow_index, T& to_delete,int to_delete_index)
+    {
+        to_grow += to_delete;
+        parent[to_delete] = to_grow;
+        increasesize(to_grow,size[to_delete]);  
+        // data[to_delete] = nullptr;
+        return;
+    }
+
+    template<class T>
+    void UnionFind<T>::Union(int q,int p)
+    {
+        //check that the union is legal
+        if (Find(q) == Find(p))
         {
-            // throw ERROR();
-            // return;
+            // return;//error?
+            throw CantUnionSameGroup();
         }
+
+        // find the groups that you want to Union
+        int group_1_index = Find(q);
+        int group_2_index = Find(p);
+        T& group_1 = data[group_1_index];
+        T& group_2 = data[group_2_index];
         
-        if (group_1 <= group_2)
+        // Unite the groups according to size
+        if (size[group_1_index] <= size[group_2_index])
         {
-            group_2 += group1;//operator 2 is to be coded
-            parent[Find(q)] = Find(p); 
-            size[Find(q)]+=size[Find(p)];
+            if (size[group_1_index] == size[group_2_index])
+            {
+                if (q > p) // q - is group_1 and p - is group_2
+                {
+                    Merge(group_1,group_1_index,group_2,group_2_index);
+                }
+                else
+                {
+                    Merge(group_2,group_2_index,group_1,group_1_index);
+                }
+            }
+            else //size[group_1_index] < size[group_2_index] 
+            {
+                Merge(group_2,group_2_index,group_1,group_1_index);
+            }
         }
         else
         {
-            group1 += group2;//operator 2 is to be coded watch out : operator += isn't symmetric
-            parent[Find(p)] = Find(q);
-            size[Find(p)]+=size[Find(q)];
+            Merge(group_1,group_1_index,group_2,group_2_index);
         }
 
-        
+        return;
     }
 
 
@@ -103,3 +150,51 @@ namespace Ehsan
 
 
 #endif
+
+
+
+
+
+
+// if (size[group_1_index] <= size[group_2_index])
+//         {
+//             if (size[group_1_index] == size[group_2_index])
+//             {
+//                 if (p > q)
+//                 {
+//                     // group_1 += group_2;
+//                     // parent[group_2_index] = group_1_index;
+//                     // increasesize(group_1_index,size[group_2_index]);
+//                     // size[group_1_index] += size[group_2_index];  
+//                     //data[group_2_index] = nullptr;
+//                     Merge(group_1,group_1_index,group_2,group_2_index);
+//                 }
+//                 else
+//                 {
+//                     // group_2 += group_1;
+//                     // parent[group_1_index] = group_2_index;
+//                     // increasesize(group_2_index,size[group_1_index]);
+//                     // size[group_2_index] += size[group_1_index];
+//                     //data[group_1_index] = nullptr;
+//                     Merge(group_2,group_2_index,group_1,group_1_index);
+//                 }
+//             }
+//             else //size[group_1_index] < size[group_2_index] 
+//             {
+//                 // group_2 += group_1;//operator += is to be coded
+//                 // parent[group_1_index] = group_2_index; 
+//                 // increasesize(group_2_index,size[group_1_index]);
+//                 // size[group_2_index] += size[group_1_index];
+//                 // data[group_1_index] = nullptr;
+//                 Merge(group_2,group_2_index,group_1,group_1_index);
+//             }
+//         }
+//         else
+//         {
+//             // group_1 += group_2;//operator 2 is to be coded watch out : operator += isn't symmetric
+//             // parent[group_2_index] = group_1_index;
+//             // increasesize(group_1_index,size[group_2_index]); 
+//             // size[group_1_index] += size[group_2_index];
+//             // data[group_2_index] = nullptr;
+//             Merge(group_1,group_1_index,group_2,group_2_index);
+//         }
