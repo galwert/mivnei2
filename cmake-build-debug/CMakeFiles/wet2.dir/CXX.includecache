@@ -6,17 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.cpp
-DynamicArray.h
-/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
-
-/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
-
-/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/main.cpp
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Exceptions.h
 iostream
 -
-DynamicArray.h
-/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
-cassert
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/UnionFind.h
+Exceptions.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Exceptions.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/main.cpp
+UnionFind.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/UnionFind.h
+iostream
 -
+cassert
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/cassert
 

@@ -204,33 +204,6 @@ Player.cpp.s:
 	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/Player.cpp.s
 .PHONY : Player.cpp.s
 
-PlayersManager.o: PlayersManager.cpp.o
-
-.PHONY : PlayersManager.o
-
-# target to build an object file
-PlayersManager.cpp.o:
-	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/PlayersManager.cpp.o
-.PHONY : PlayersManager.cpp.o
-
-PlayersManager.i: PlayersManager.cpp.i
-
-.PHONY : PlayersManager.i
-
-# target to preprocess a source file
-PlayersManager.cpp.i:
-	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/PlayersManager.cpp.i
-.PHONY : PlayersManager.cpp.i
-
-PlayersManager.s: PlayersManager.cpp.s
-
-.PHONY : PlayersManager.s
-
-# target to generate assembly for a file
-PlayersManager.cpp.s:
-	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/PlayersManager.cpp.s
-.PHONY : PlayersManager.cpp.s
-
 RankTree.o: RankTree.cpp.o
 
 .PHONY : RankTree.o
@@ -303,9 +276,6 @@ help:
 	@echo "... Player.o"
 	@echo "... Player.i"
 	@echo "... Player.s"
-	@echo "... PlayersManager.o"
-	@echo "... PlayersManager.i"
-	@echo "... PlayersManager.s"
 	@echo "... RankTree.o"
 	@echo "... RankTree.i"
 	@echo "... RankTree.s"

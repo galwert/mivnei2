@@ -9,11 +9,12 @@ namespace Ehsan
     
     class Player
     {
-    private:
+    public:
+        int original_group;
         int player_id;
         int level;
         int score;
-    public:
+
         Player(int id = 0, int level = 0, int score = 0);
         ~Player();
         int GetPlayerID();
@@ -25,7 +26,8 @@ namespace Ehsan
 
     };
     
-    Player::Player(int id = 0, int level = 0, int score = 0):
+    Player::Player(int original_group,int id , int level , int score):
+    original_group(original_group),
     player_id(id),
     level(level),
     score(score)

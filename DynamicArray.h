@@ -4,12 +4,8 @@
 
 #ifndef MAIN_CPP_DYNAMICARRAY_H
 #define MAIN_CPP_DYNAMICARRAY_H
+#include "library2.h"
 namespace Ehsan {
-    typedef enum {
-        SUCCESS = 1,
-        ALREADY_EXIST = 2,
-       NOT_FOUND = 3,
-    } StatusType;
 
     template<class T>
     class ListNode//---------------ListNode-----------------------------
@@ -69,7 +65,7 @@ namespace Ehsan {
                 node=node->next;
 
             }
-            return NOT_FOUND;
+            return FAILURE;
         }
         ListNode<T> *find(int id)
         {
@@ -143,25 +139,26 @@ namespace Ehsan {
             }
             else
             {
-                return ALREADY_EXIST;
+                return FAILURE;
             }
             node_count++;
             return SUCCESS;
         }
-        int  find(int id)
+        StatusType find(int id,T* data)
         {
             if( array[id%size]->find(id)== nullptr)
             {
-                return -1;
+                return FAILURE;
             }
             else
-                return id;
+                *data = array[id%size]->find(id);
+                return SUCCESS;
         }
        StatusType remove(int id)
         {
-            if(find(id)== -1)
+            if(find(id)== FAILURE)
             {
-                return NOT_FOUND;
+                return FAILURE;
             }
             else
             {

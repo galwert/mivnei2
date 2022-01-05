@@ -171,7 +171,7 @@ namespace Ehsan {
 
         void merge(T *a, S *a_h , int na, T *b,S *b_h, int nb, T *c,S *c_h);
 
-        void uniteTrees(RankTree<T,S> &other);
+        void uniteTrees(const RankTree<T,S> &other);
 
         RankTree(const RankTree &tree);
 
@@ -559,7 +559,7 @@ namespace Ehsan {
     }
 
     template<class T, class S>
-    void RankTree<T, S>::uniteTrees(RankTree<T, S> &other)
+    void RankTree<T, S>::uniteTrees(const RankTree<T, S> &other)
     {
         int this_nodes = countNodes(this->root);
         int other_nodes =  countNodes(other.root);
@@ -575,7 +575,6 @@ namespace Ehsan {
             }
             return;
         }
-
         int *index = new int();
         S this_keys [this_nodes];
         T this_data [this_nodes];
@@ -588,9 +587,9 @@ namespace Ehsan {
         S total_keys [this_nodes + other_nodes];
         T total_data[this_nodes + other_nodes];
         merge(this_data,this_keys,this_nodes,other_data,other_keys,other_nodes,total_data,total_keys);
-        treeDelete(other.root);
+        //treeDelete(other.root);
         BSTNode<T,S> *newtree = createEmptyFullTree(total_keys,total_data,0,this_nodes + other_nodes-1);
-        other.root = newtree;
+        this->root = newtree;
         delete index;
     }
 

@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/wet2.dir/main.cpp.o CMakeFiles/wet2.dir/RankTree.cpp.o CMakeFiles/wet2.dir/DynamicArray.cpp.o CMakeFiles/wet2.dir/Group.cpp.o CMakeFiles/wet2.dir/Player.cpp.o CMakeFiles/wet2.dir/PlayersManager.cpp.o  -o wet2 
+/usr/bin/c++  -g   CMakeFiles/wet2.dir/main.cpp.o CMakeFiles/wet2.dir/RankTree.cpp.o CMakeFiles/wet2.dir/DynamicArray.cpp.o CMakeFiles/wet2.dir/Group.cpp.o CMakeFiles/wet2.dir/Player.cpp.o  -o wet2 
