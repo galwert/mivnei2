@@ -14,21 +14,22 @@ namespace Ehsan
          int scale;
          RankTree<int,int>** players_by_scale;
          RankTree<int,int> players_by_level;
-        BSTNode<int,int>* level_zero_level;
-        BSTNode<int,int>** level_zero_scale;
+       int level_zero_level;
+       int* level_zero_scale;
 
         Group()=delete;
         explicit Group(int scale):num_of_players(0),
         scale(scale),
         players_by_scale(new RankTree<int,int>*[scale+1]),
                          players_by_level(),
-                         level_zero_scale( new BSTNode<int,int>*[scale+1])
+                         level_zero_level(0),
+                         level_zero_scale( new int[scale+1])
         {
             for(int i=1;i<=scale;i++)
             {
-                level_zero_scale[i]=players_by_scale[i]->insert(0, 0);
+                level_zero_scale[i]=0;
             }
-            level_zero_level=players_by_level.insert(0, 0);
+            level_zero_level=0;
 
         }
         ~Group()
@@ -46,10 +47,10 @@ namespace Ehsan
             for(int i=1;i<=scale;i++)
             {
                 players_by_scale[i]->uniteTrees(*other.players_by_scale[i]);
-                level_zero_scale[i]=players_by_scale[i]->find(0);
+                level_zero_scale[i]+=other.level_zero_scale[i];
             }
             players_by_level.uniteTrees(other.players_by_level);
-            level_zero_level=players_by_level.find(0);
+            level_zero_level+=other.level_zero_level;
             this->num_of_players+=other.num_of_players;
             return *this;
         }

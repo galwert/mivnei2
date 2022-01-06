@@ -25,6 +25,8 @@ namespace Ehsan {
         BSTNode *parent;
         int height;
         int rank;
+        int sum;
+
 
 
 
@@ -40,7 +42,20 @@ namespace Ehsan {
 
         ~BSTNode() = default;
 
-
+        int getSum() {
+            if (this == nullptr) {
+                return 0;
+            }
+            if (this->left == nullptr && this->right == nullptr) {
+                return (int)data;
+            } else if (this->left == nullptr) {
+                return (int)data + this->right->sum;
+            } else if (this->right == nullptr) {
+                return (int)data + this->left->sum;
+            } else {
+                return (int)data + this->left->sum+ this->right->sum;
+            }
+        }
         int getHeight() {
             if (this == nullptr) {
                 return 0;
@@ -67,9 +82,28 @@ namespace Ehsan {
             } else if (this->right == nullptr) {
                 return 1 + this->left->rank;
             } else {
-                return 1 + this->left->rank+ this->right->rank;
+                return 1 + this->left->rank + this->right->rank;
             }
         }
+        void increaseAllNodesInTrack()
+        {
+            BSTNode<T,S> *node =this;
+            while(node!= nullptr)
+            {
+                this->sum++;
+                node=node->parent;
+            }
+        }
+        void decreaseAllNodesInTrack()
+        {
+            BSTNode<T,S> *node =this;
+            while(node!= nullptr)
+            {
+                this->sum--;
+                node=node->parent;
+            }
+        }
+
     };//-------------------------------BSTNode END---------------------------
 
 
@@ -88,7 +122,7 @@ namespace Ehsan {
             }
             return (countNodes(node->left) + countNodes(node->right) + 1);
         }
-        void removeInternal(BSTNode<T,S> *root,S key);
+        void removeInternal(BSTNode<T,S> *node);
 
         static BSTNode<T,S> *leftRotate(BSTNode<T,S> *x) {
 
@@ -113,6 +147,8 @@ namespace Ehsan {
             y->height = y->getHeight();
             x->rank=x->getRank();
             y->rank=y->getRank();
+            x->sum=x->getSum();
+            y->sum=y->getSum();
             return y;
 
         }
@@ -140,6 +176,8 @@ namespace Ehsan {
             x->height = x->getHeight();
             y->rank=y->getRank();
             x->rank=x->getRank();
+            y->sum=y->getSum();
+            x->sum=x->getSum();
             return x;
         }
 
@@ -426,6 +464,7 @@ namespace Ehsan {
             start=start->roll();
             start->height = start->getHeight();
             start->rank=start->getRank();
+            start->sum=start->getSum();
             start=start->parent;
         }
     }
@@ -452,7 +491,7 @@ namespace Ehsan {
             }
         }
 
-        removeInternal(toDelete,key);
+        removeInternal(toDelete);
         if(this->root!=nullptr&&this->root->parent!=nullptr)
         {
             this->root=this->root->parent;
@@ -460,7 +499,7 @@ namespace Ehsan {
     }
 
     template<class T,class S>
-    void RankTree<T,S>::removeInternal(BSTNode<T,S>* node,S key) {
+    void RankTree<T,S>::removeInternal(BSTNode<T,S>* node) {
         if (node == nullptr)
             return;
         if ((node->left == nullptr) || (node->right == nullptr)) {
@@ -493,7 +532,7 @@ namespace Ehsan {
             }
             node->key = temp->key;
             node->data = temp->data;
-            removeInternal(temp,temp->key);
+            removeInternal(temp);
         }
     }
     template<class T,class S>
@@ -513,7 +552,10 @@ namespace Ehsan {
         BSTNode<T,S>* newroot = new BSTNode<T,S>(keys[mid],data[mid]);
         newroot->left = createEmptyFullTree(keys,data,min,mid-1);
         newroot->right = createEmptyFullTree(keys,data,mid+1,max);
-        newroot->height = getHeight(newroot);
+        newroot->height =newroot->getHeight();
+        newroot->rank=newroot->getRank();
+        newroot->sum=newroot->getSum();
+
         if(newroot->right!= nullptr)
         {
             newroot->right->parent=newroot;
@@ -522,8 +564,6 @@ namespace Ehsan {
         {
             newroot->left->parent=newroot;
         }
-        newroot->rank=getRank(newroot);
-        newroot->height=getHeight(newroot);
         return newroot;
     }
 

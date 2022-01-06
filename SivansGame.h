@@ -23,8 +23,8 @@ namespace Ehsan
         RankTree<int,int>** players_by_scale;
         RankTree<int,int> players_by_level;
 
-        BSTNode<int,int>* level_zero_level;
-        BSTNode<int,int>** level_zero_scale;
+        int level_zero_level;
+        int* level_zero_scale;
         DynamicArray<Player>* players;
 
         SivansGame(int num_of_groups, int scale);
@@ -48,16 +48,16 @@ namespace Ehsan
     num_of_groups(num_of_groups),
     scale(scale),
     num_of_players(0),
-    groups(new UnionFind<Group>(num_of_groups,scale))
+    groups(new UnionFind<Group>(num_of_groups,scale)),
     players_by_scale(new RankTree<int,int>*[scale+1]),
     players_by_level(),
-    level_zero_scale( new BSTNode<int,int>*[scale+1]),
+    level_zero_level(0),
+    level_zero_scale( new int[scale+1]),
     players(new DynamicArray<Player>(ARRAY_SIZE,BALANCE_FACTOR))
     {
         for (int i = 1; i <= scale; i++) {
-            level_zero_scale[i] = players_by_scale[i]->insert(0, 0);
+            level_zero_scale[i] =0;
         }
-        level_zero_level = players_by_level.insert(0, 0);
 
     }
     SivansGame::~SivansGame()
@@ -94,8 +94,8 @@ namespace Ehsan
         {
             return FAILURE;
         }
-        this->level_zero_level->data++;
-        this->level_zero_scale[score]->data++;
+        this->level_zero_level++;
+        this->level_zero_scale[score]++;
         this->num_of_players++;
         this->groups.data[this->groups.Find(GroupID)].num_of_players++;
         this->groups.data[this->groups.Find(GroupID)].level_zero_level++;
@@ -107,7 +107,7 @@ namespace Ehsan
     StatusType SivansGame::RemovePlayer(int PlayerID) {
         if(PlayerID <= 0)
         {
-            INVALID_INPUT;
+            return INVALID_INPUT;
         }
         Player* to_find;
         if(this->players->find(PlayerID,to_find) == FAILURE)
@@ -118,21 +118,99 @@ namespace Ehsan
 
 
         this->num_of_players--;
-        players_by_scale[to_find->score]->find(to_find->level)->data--;
-        players_by_level.find(to_find->level)->data--;
-        if(players_by_level.find(to_find->level)->data == 0 && to_find->level != 0)
+        if(to_find->level==0)
         {
-            players_by_level.remove((to_find->level));
+            level_zero_level--;
+            level_zero_scale[to_find->score]--;
         }
-
+        else
+            {
+            players_by_scale[to_find->score]->find(to_find->level)->decreaseAllNodesInTrack();
+            players_by_level.find(to_find->level)->decreaseAllNodesInTrack();
+            players_by_level.find(to_find->level)->data--;
+            players_by_scale[to_find->score]->find(to_find->level)->data--;
+        }
+        if(players_by_level.find(to_find->level)->data == 0)
+        {
+            players_by_level.remove(to_find->level);
+        }
         this->groups.data[to_find_group].num_of_players--;
         this->groups.size[to_find_group]--;
-        groups.data[to_find_group].players_by_scale[to_find->score]->find(to_find->level)->data--;
-        groups.data[to_find_group].players_by_level.find(to_find->level)->data--;
-        if(groups.data[to_find_group].players_by_level.find(to_find->level)->data == 0 && to_find->level != 0)// change level zero to be outside of the tree
+        if(to_find->level==0)
         {
-            groups.data[to_find_group].players_by_level.remove((to_find->level));
+            this->groups.data[to_find_group].level_zero_level--;
+            this->groups.data[to_find_group].level_zero_scale[to_find->score]--;
         }
+        else
+            {
+            groups.data[to_find_group].players_by_scale[to_find->score]->find(to_find->level)->decreaseAllNodesInTrack();
+            groups.data[to_find_group].players_by_level.find(to_find->level)->decreaseAllNodesInTrack();
+            groups.data[to_find_group].players_by_scale[to_find->score]->find(to_find->level)->data--;
+            groups.data[to_find_group].players_by_level.find(to_find->level)->data--;
+        }
+        if(groups.data[to_find_group].players_by_level.find(to_find->level)->data == 0 )
+        {
+            groups.data[to_find_group].players_by_level.remove(to_find->level);
+        }
+        players->remove(PlayerID);
+        return SUCCESS;
+    }
+    StatusType SivansGame::IncreasePlayerIDLevel(int PlayerID, int LevelIncrease) {
+
+        if(PlayerID <= 0||LevelIncrease<=0)
+        {
+            return INVALID_INPUT;
+        }
+        Player* to_find;
+        if(this->players->find(PlayerID,to_find) == FAILURE)
+        {
+            return FAILURE;
+        }
+        int to_find_group = groups.Find(to_find->original_group);
+        this->num_of_players--;
+        if(to_find->level==0)
+        {
+            level_zero_level--;
+            level_zero_scale[to_find->score]--;
+        }
+        else
+        {
+            players_by_scale[to_find->score]->find(to_find->level)->decreaseAllNodesInTrack();
+            players_by_level.find(to_find->level)->decreaseAllNodesInTrack();
+            players_by_level.find(to_find->level)->data--;
+            players_by_scale[to_find->score]->find(to_find->level)->data--;
+        }
+        if(players_by_level.find(to_find->level)->data == 0)
+        {
+            players_by_level.remove(to_find->level);
+        }
+        this->groups.data[to_find_group].num_of_players--;
+        this->groups.size[to_find_group]--;
+        if(to_find->level==0)
+        {
+            this->groups.data[to_find_group].level_zero_level--;
+            this->groups.data[to_find_group].level_zero_scale[to_find->score]--;
+        }
+        else
+        {
+            groups.data[to_find_group].players_by_scale[to_find->score]->find(to_find->level)->decreaseAllNodesInTrack();
+            groups.data[to_find_group].players_by_level.find(to_find->level)->decreaseAllNodesInTrack();
+            groups.data[to_find_group].players_by_scale[to_find->score]->find(to_find->level)->data--;
+            groups.data[to_find_group].players_by_level.find(to_find->level)->data--;
+        }
+        if(groups.data[to_find_group].players_by_level.find(to_find->level)->data == 0 )
+        {
+            groups.data[to_find_group].players_by_level.remove(to_find->level);
+        }
+        to_find->level+=LevelIncrease;
+        players_by_scale[to_find->score]->find(to_find->level)->increaseAllNodesInTrack();
+        players_by_level.find(to_find->level)->increaseAllNodesInTrack();
+        players_by_level.find(to_find->level)->data++;
+        players_by_scale[to_find->score]->find(to_find->level)->data++;
+        groups.data[to_find_group].players_by_scale[to_find->score]->find(to_find->level)->increaseAllNodesInTrack();
+        groups.data[to_find_group].players_by_level.find(to_find->level)->increaseAllNodesInTrack();
+        groups.data[to_find_group].players_by_level.find(to_find->level)->data++;
+        groups.data[to_find_group]. players_by_scale[to_find->score]->find(to_find->level)->data++;
 
         return SUCCESS;
     }
