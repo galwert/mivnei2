@@ -1,192 +1,400 @@
+/***************************************************************************/
+/*                                                                         */
+/* 234218 Data DSs 1, Winter 2021-2022                                     */
+/* Homework : Wet 2                                                        */
+/*                                                                         */
+/***************************************************************************/
 
-#include "UnionFind.h"
+/***************************************************************************/
+/*                                                                         */
+/* File Name : main2.cpp                                                   */
+/*                                                                         */
+/* Holds the "int main()" function and the parser of the shell's           */
+/* command line.                                                           */
+/***************************************************************************/
+
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "library2.h"
 #include <iostream>
-#include "cassert"
 using namespace std;
-using namespace Ehsan;
 
-int main()
-{
-    UnionFind<int> uni(40,200);
-    uni.Union(25,7);
-//{0->[0],1->[1],2->[2],3->[3],4->[4],5->[5],6->[6],8->[8],9->[9],10->[10],11->[11],12->[12],13->[13],14->[14],15->[15],16->[16],17->[17],18->[18],19->[19],20->[20],21->[21],22->[22],23->[23],24->[24],25->[7, 25],26->[26],27->[27],28->[28],29->[29],30->[30],31->[31],32->[32],33->[33],34->[34],35->[35],36->[36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(39)==39);
-    uni.Union(4,8);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],9->[9],10->[10],11->[11],12->[12],13->[13],14->[14],15->[15],16->[16],17->[17],18->[18],19->[19],20->[20],21->[21],22->[22],23->[23],24->[24],25->[7, 25],26->[26],27->[27],28->[28],29->[29],30->[30],31->[31],32->[32],33->[33],34->[34],35->[35],36->[36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(22)==22);
-    uni.Union(11,20);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],9->[9],10->[10],12->[12],13->[13],14->[14],15->[15],16->[16],17->[17],18->[18],19->[19],20->[20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],26->[26],27->[27],28->[28],29->[29],30->[30],31->[31],32->[32],33->[33],34->[34],35->[35],36->[36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(31)==31);
-    uni.Union(11,9);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],12->[12],13->[13],14->[14],15->[15],16->[16],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],26->[26],27->[27],28->[28],29->[29],30->[30],31->[31],32->[32],33->[33],34->[34],35->[35],36->[36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(25)==25);
-    uni.Union(13,33);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],12->[12],14->[14],15->[15],16->[16],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],26->[26],27->[27],28->[28],29->[29],30->[30],31->[31],32->[32],33->[33, 13],34->[34],35->[35],36->[36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(37)==37);
-    uni.Union(16,34);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],12->[12],14->[14],15->[15],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],26->[26],27->[27],28->[28],29->[29],30->[30],31->[31],32->[32],33->[33, 13],34->[34, 16],35->[35],36->[36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(37)==37);
-    uni.Union(28,26);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],12->[12],14->[14],15->[15],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],27->[27],28->[26, 28],29->[29],30->[30],31->[31],32->[32],33->[33, 13],34->[34, 16],35->[35],36->[36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(2)==2);
-    uni.Union(36,12);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],14->[14],15->[15],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],27->[27],28->[26, 28],29->[29],30->[30],31->[31],32->[32],33->[33, 13],34->[34, 16],35->[35],36->[12, 36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(32)==32);
-    uni.Union(29,33);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],14->[14],15->[15],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[32],33->[33, 13, 29],34->[34, 16],35->[35],36->[12, 36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(2)==2);
-    uni.Union(14,16);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],15->[15],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],24->[24],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[32],33->[33, 13, 29],34->[34, 16, 14],35->[35],36->[12, 36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(35)==35);
-    uni.Union(32,24);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],8->[8, 4],10->[10],15->[15],17->[17],18->[18],19->[19],20->[9, 20, 11],21->[21],22->[22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14],35->[35],36->[12, 36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(17)==17);
-    uni.Union(11,8);
-//{0->[0],1->[1],2->[2],3->[3],5->[5],6->[6],10->[10],15->[15],17->[17],18->[18],19->[19],20->[8, 4, 9, 20, 11],21->[21],22->[22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14],35->[35],36->[12, 36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(22)==22);
-    uni.Union(1,16);
-//{0->[0],2->[2],3->[3],5->[5],6->[6],10->[10],15->[15],17->[17],18->[18],19->[19],20->[8, 4, 9, 20, 11],21->[21],22->[22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[12, 36],37->[37],38->[38],39->[39],}
-    assert(uni.Find(4)==20);
-    uni.Union(39,21);
-//{0->[0],2->[2],3->[3],5->[5],6->[6],10->[10],15->[15],17->[17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[12, 36],37->[37],38->[38],39->[21, 39],}
-    assert(uni.Find(13)==33);
-    uni.Union(21,15);
-//{0->[0],2->[2],3->[3],5->[5],6->[6],10->[10],17->[17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[12, 36],37->[37],38->[38],39->[15, 21, 39],}
-    assert(uni.Find(37)==37);
-    uni.Union(17,10);
-//{0->[0],2->[2],3->[3],5->[5],6->[6],17->[10, 17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[12, 36],37->[37],38->[38],39->[15, 21, 39],}
-    assert(uni.Find(11)==20);
-    uni.Union(3,15);
-//{0->[0],2->[2],5->[5],6->[6],17->[10, 17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[12, 36],37->[37],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(23)==23);
-    uni.Union(22,5);
-//{0->[0],2->[2],6->[6],17->[10, 17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[5, 22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[12, 36],37->[37],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(21)==39);
-    uni.Union(22,2);
-//{0->[0],6->[6],17->[10, 17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],32->[24, 32],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[12, 36],37->[37],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(7)==25);
-    uni.Union(36,32);
-//{0->[0],6->[6],17->[10, 17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],34->[34, 16, 14, 1],35->[35],36->[24, 32, 12, 36],37->[37],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(14)==34);
-    uni.Union(37,1);
-//{0->[0],6->[6],17->[10, 17],18->[18],19->[19],20->[8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],34->[34, 16, 14, 1, 37],35->[35],36->[24, 32, 12, 36],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(7)==25);
-    uni.Union(18,17);
-//{0->[0],6->[6],17->[10, 17, 18],19->[19],20->[8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],27->[27],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],34->[34, 16, 14, 1, 37],35->[35],36->[24, 32, 12, 36],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(34)==34);
-    uni.Union(27,18);
-//{0->[0],6->[6],17->[10, 17, 18, 27],19->[19],20->[8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],34->[34, 16, 14, 1, 37],35->[35],36->[24, 32, 12, 36],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(37)==34);
-    uni.Union(32,10);
-//{0->[0],6->[6],19->[19],20->[8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],34->[34, 16, 14, 1, 37],35->[35],36->[10, 17, 18, 27, 24, 32, 12, 36],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(11)==20);
-    uni.Union(20,6);
-//{0->[0],19->[19],20->[6, 8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],34->[34, 16, 14, 1, 37],35->[35],36->[10, 17, 18, 27, 24, 32, 12, 36],38->[38],39->[15, 21, 39, 3],}
-    assert(uni.Find(13)==33);
-    uni.Union(38,24);
-//{0->[0],19->[19],20->[6, 8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],34->[34, 16, 14, 1, 37],35->[35],36->[10, 17, 18, 27, 24, 32, 12, 36, 38],39->[15, 21, 39, 3],}
-    assert(uni.Find(11)==20);
-    uni.Union(27,16);
-//{0->[0],19->[19],20->[6, 8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],35->[35],36->[34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],39->[15, 21, 39, 3],}
-    assert(uni.Find(38)==36);
-    uni.Union(12,39);
-//{0->[0],19->[19],20->[6, 8, 4, 9, 20, 11],22->[2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],35->[35],36->[15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(27)==36);
-    uni.Union(2,9);
-//{0->[0],19->[19],20->[6, 8, 4, 9, 20, 11, 2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],35->[35],36->[15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(27)==36);
-    uni.Union(12,34);
-//{0->[0],19->[19],20->[6, 8, 4, 9, 20, 11, 2, 5, 22],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],35->[35],36->[15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(11)==20);
-    uni.Union(32,11);
-//{0->[0],19->[19],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],35->[35],36->[6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(39)==36);
-    uni.Union(6,1);
-//{0->[0],19->[19],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],33->[33, 13, 29],35->[35],36->[6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(37)==36);
-    uni.Union(20,33);
-//{0->[0],19->[19],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],35->[35],36->[33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(21)==36);
-    uni.Union(32,1);
-//{0->[0],19->[19],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],35->[35],36->[33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(4)==36);
-    uni.Union(21,34);
-//{0->[0],19->[19],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],35->[35],36->[33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(10)==36);
-    uni.Union(22,11);
-//{0->[0],19->[19],23->[23],25->[7, 25],28->[26, 28],30->[30],31->[31],35->[35],36->[33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(35)==35);
-    uni.Union(1,25);
-//{0->[0],19->[19],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(20)==36);
-    uni.Union(29,16);
-//{0->[0],19->[19],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38],}
-    assert(uni.Find(13)==36);
-    uni.Union(19,13);
-//{0->[0],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19],}
-    assert(uni.Find(9)==36);
-    uni.Union(8,32);
-//{0->[0],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19],}
-    assert(uni.Find(7)==36);
-    uni.Union(22,18);
-//{0->[0],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19],}
-    assert(uni.Find(14)==36);
-    uni.Union(10,8);
-//{0->[0],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19],}
-    assert(uni.Find(26)==28);
-    uni.Union(17,19);
-//{0->[0],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19],}
-    assert(uni.Find(17)==36);
-    uni.Union(15,39);
-//{0->[0],23->[23],28->[26, 28],30->[30],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19],}
-    assert(uni.Find(9)==36);
-    uni.Union(23,30);
-//{0->[0],28->[26, 28],30->[30, 23],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19],}
-    assert(uni.Find(33)==36);
-    uni.Union(23,20);
-//{0->[0],28->[26, 28],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(25)==36);
-    uni.Union(21,3);
-//{0->[0],28->[26, 28],31->[31],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(35)==35);
-    uni.Union(28,31);
-//{0->[0],28->[31, 26, 28],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(13)==36);
-    uni.Union(34,19);
-//{0->[0],28->[31, 26, 28],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(11)==36);
-    uni.Union(17,25);
-//{0->[0],28->[31, 26, 28],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(39)==36);
-    uni.Union(24,22);
-//{0->[0],28->[31, 26, 28],35->[35],36->[7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(26)==28);
-    uni.Union(34,26);
-//{0->[0],35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(18)==36);
-    uni.Union(26,3);
-//{0->[0],35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(15)==36);
-    uni.Union(27,6);
-//{0->[0],35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(28)==36);
-    uni.Union(19,29);
-//{0->[0],35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(37)==36);
-    uni.Union(17,30);
-//{0->[0],35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23],}
-    assert(uni.Find(33)==36);
-    uni.Union(0,36);
-//{35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23, 0],}
-    assert(uni.Find(14)==36);
-    uni.Union(30,6);
-//{35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23, 0],}
-    assert(uni.Find(27)==36);
-    uni.Union(14,0);
-//{35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23, 0],}
-    assert(uni.Find(17)==36);
-    uni.Union(16,2);
-//{35->[35],36->[31, 26, 28, 7, 25, 33, 13, 29, 6, 8, 4, 9, 20, 11, 2, 5, 22, 15, 21, 39, 3, 34, 16, 14, 1, 37, 10, 17, 18, 27, 24, 32, 12, 36, 38, 19, 30, 23, 0],}
-    assert(uni.Find(10)==36);
-    cout << "done";
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* The command's strings */
+typedef enum {
+    NONE_CMD = -2,
+    COMMENT_CMD = -1,
+    INIT_CMD = 0,
+    MERGEGROUPS_CMD = 1,
+    ADDPLAYER_CMD = 2,
+    REMOVEPLAYER_CMD = 3,
+    INCREASEPLAYERIDLEVEL_CMD = 4,
+    CHANGEPLAYERIDSCORE_CMD = 5,
+    GETPERCENTOFPLAYERSWITHSCOREINBOUNDS_CMD = 6,
+    AVERAGEHIGHESTPLAYERLEVELBYGROUP_CMD = 7,
+    GETPLAYERSBOUND_CMD = 8,
+    QUIT_CMD = 9
+} commandType;
+
+static const int numActions = 10;
+static const char *commandStr[] = {
+        "Init",
+        "MergeGroups",
+        "AddPlayer",
+        "RemovePlayer",
+        "IncreasePlayerIDLevel",
+        "ChangePlayerIDScore",
+        "GetPercentOfPlayersWithScoreInBounds",
+        "AverageHighestPlayerLevelByGroup",
+        "GetPlayersBound",
+        "Quit" };
+
+static const char* ReturnValToStr(int val) {
+    switch (val) {
+        case SUCCESS:
+            return "SUCCESS";
+        case ALLOCATION_ERROR:
+            return "ALLOCATION_ERROR";
+        case FAILURE:
+            return "FAILURE";
+        case INVALID_INPUT:
+            return "INVALID_INPUT";
+        default:
+            return "";
+    }
 }
+
+/* we assume maximum string size is not longer than 256  */
+#define MAX_STRING_INPUT_SIZE (255)
+#define MAX_BUFFER_SIZE       (255)
+
+#define StrCmp(Src1,Src2) ( strncmp((Src1),(Src2),strlen(Src1)) == 0 )
+
+typedef enum {
+    error_free, error
+} errorType;
+static errorType parser(const char* const command);
+
+#define ValidateRead(read_parameters,required_parameters,ErrorString) \
+if ( (read_parameters)!=(required_parameters) ) { printf(ErrorString); return error; }
+
+static bool isInit = false;
+
+/***************************************************************************/
+/* main                                                                    */
+/***************************************************************************/
+
+int main(int argc, const char**argv) {
+    char buffer[MAX_STRING_INPUT_SIZE];
+
+    // Reading commands
+    while (fgets(buffer, MAX_STRING_INPUT_SIZE, stdin) != NULL) {
+        fflush(stdout);
+        if (parser(buffer) == error)
+            break;
+    };
+    return 0;
+}
+
+/***************************************************************************/
+/* Command Checker                                                         */
+/***************************************************************************/
+
+static commandType CheckCommand(const char* const command,
+                                const char** const command_arg) {
+    if (command == NULL || strlen(command) == 0 || StrCmp("\n", command))
+        return (NONE_CMD);
+    if (StrCmp("#", command)) {
+        if (strlen(command) > 1)
+            printf("%s", command);
+        return (COMMENT_CMD);
+    };
+    for (int index = 0; index < numActions; index++) {
+        if (StrCmp(commandStr[index], command)) {
+            *command_arg = command + strlen(commandStr[index]) + 1;
+            return ((commandType) index);
+        };
+    };
+    return (NONE_CMD);
+}
+
+/***************************************************************************/
+/* Commands Functions                                                      */
+/***************************************************************************/
+
+static errorType OnInit(void** DS, const char* const command);
+static errorType OnMergeGroups(void* DS, const char* const command);
+static errorType OnAddPlayer(void* DS, const char* const command);
+static errorType OnRemovePlayer(void* DS, const char* const command);
+static errorType OnIncreasePlayerIDLevel(void* DS, const char* const command);
+static errorType OnChangePlayerIDScore(void* DS, const char* const command);
+static errorType OnGetPercentOfPlayersWithScoreInBounds(void* DS, const char* const command);
+static errorType OnAverageHighestPlayerLevelByGroup(void* DS, const char* const command);
+static errorType OnGetPlayersBound(void* DS, const char* const command);
+static errorType OnQuit(void** DS, const char* const command);
+
+/***************************************************************************/
+/* Parser                                                                  */
+/***************************************************************************/
+
+static errorType parser(const char* const command) {
+    static void *DS = NULL; /* The general data structure */
+    const char* command_args = NULL;
+    errorType rtn_val = error;
+
+    commandType command_val = CheckCommand(command, &command_args);
+
+    switch (command_val) {
+
+        case (INIT_CMD):
+            rtn_val = OnInit(&DS, command_args);
+            break;
+        case (MERGEGROUPS_CMD):
+            rtn_val = OnMergeGroups(DS, command_args);
+            break;
+        case (ADDPLAYER_CMD):
+            rtn_val = OnAddPlayer(DS, command_args);
+            break;
+        case (REMOVEPLAYER_CMD):
+            rtn_val = OnRemovePlayer(DS, command_args);
+            break;
+        case (INCREASEPLAYERIDLEVEL_CMD):
+            rtn_val = OnIncreasePlayerIDLevel(DS, command_args);
+            break;
+        case (CHANGEPLAYERIDSCORE_CMD):
+            rtn_val = OnChangePlayerIDScore(DS, command_args);
+            break;
+        case (GETPERCENTOFPLAYERSWITHSCOREINBOUNDS_CMD):
+            rtn_val = OnGetPercentOfPlayersWithScoreInBounds(DS, command_args);
+            break;
+        case (AVERAGEHIGHESTPLAYERLEVELBYGROUP_CMD):
+            rtn_val = OnAverageHighestPlayerLevelByGroup(DS, command_args);
+            break;
+        case (GETPLAYERSBOUND_CMD):
+            rtn_val = OnGetPlayersBound(DS, command_args);
+            break;
+        case (QUIT_CMD):
+            rtn_val = OnQuit(&DS, command_args);
+            break;
+        case (COMMENT_CMD):
+            rtn_val = error_free;
+            break;
+        case (NONE_CMD):
+            rtn_val = error;
+            break;
+        default:
+            assert(false);
+            break;
+    };
+    return (rtn_val);
+}
+
+/***************************************************************************/
+/* OnInit                                                                  */
+/***************************************************************************/
+static errorType OnInit(void** DS, const char* const command) {
+    if (isInit) {
+        printf("Init was already called.\n");
+        return (error_free);
+    };
+    isInit = true;
+    int k;
+    int scale;
+    ValidateRead(sscanf(command, "%d %d", &k, &scale), 2, "Init failed.\n");
+    *DS = Init(k, scale);
+    if (*DS == NULL) {
+        printf("Init failed.\n");
+        return error;
+    };
+    printf("Init done.\n");
+
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnMergeGroups                                                             */
+/***************************************************************************/
+static errorType OnMergeGroups(void* DS, const char* const command) {
+    int groupID1;
+    int groupID2;
+    ValidateRead(sscanf(command, "%d %d", &groupID1, &groupID2), 2, "MergeGroups failed.\n");
+    StatusType res = MergeGroups(DS, groupID1, groupID2);
+
+    if (res != SUCCESS) {
+        printf("MergeGroups: %s\n", ReturnValToStr(res));
+        return error_free;
+    } else {
+        printf("MergeGroups: %s\n", ReturnValToStr(res));
+    }
+
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnAddPlayer                                                          */
+/***************************************************************************/
+static errorType OnAddPlayer(void* DS, const char* const command) {
+    int playerID;
+    int groupID;
+    int score;
+    ValidateRead(
+            sscanf(command, "%d %d %d", &playerID, &groupID, &score),
+            3, "AddPlayer failed.\n");
+    StatusType res = AddPlayer(DS, playerID, groupID, score);
+
+    if (res != SUCCESS) {
+        printf("AddPlayer: %s\n", ReturnValToStr(res));
+        return error_free;
+    }
+
+    printf("AddPlayer: %s\n", ReturnValToStr(res));
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnRemovePlayer                                                            */
+/***************************************************************************/
+static errorType OnRemovePlayer(void* DS, const char* const command) {
+    int playerID;
+    ValidateRead(sscanf(command, "%d", &playerID), 1,
+                 "RemovePlayer failed.\n");
+    StatusType res = RemovePlayer(DS, playerID);
+    if (res != SUCCESS) {
+        printf("RemovePlayer: %s\n", ReturnValToStr(res));
+        return error_free;
+    }
+
+    printf("RemovePlayer: %s\n", ReturnValToStr(res));
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnIncreasePlayerIDLevel                                                         */
+/***************************************************************************/
+static errorType OnIncreasePlayerIDLevel(void* DS, const char* const command) {
+    int playerID;
+    int levelIncrease;
+    ValidateRead(sscanf(command, "%d %d", &playerID, &levelIncrease), 2,
+                 "IncreasePlayerIDLevel failed.\n");
+    StatusType res = IncreasePlayerIDLevel(DS, playerID, levelIncrease);
+
+    if (res != SUCCESS) {
+        printf("IncreasePlayerIDLevel: %s\n", ReturnValToStr(res));
+        return error_free;
+    }
+
+    printf("IncreasePlayerIDLevel: %s\n", ReturnValToStr(res));
+    return error_free;
+}
+
+
+/***************************************************************************/
+/* OnChangePlayerIDScore                                                         */
+/***************************************************************************/
+static errorType OnChangePlayerIDScore(void* DS, const char* const command) {
+    int playerID;
+    int newScore;
+    ValidateRead(sscanf(command, "%d %d", &playerID, &newScore), 2, "ChangePlayerIDScore failed.\n");
+    StatusType res = ChangePlayerIDScore(DS, playerID, newScore);
+
+    if (res != SUCCESS) {
+        printf("ChangePlayerIDScore: %s\n", ReturnValToStr(res));
+        return error_free;
+    }
+
+    printf("ChangePlayerIDScore: %s\n", ReturnValToStr(res));
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnGetPercentOfPlayersWithScoreInBounds                                                        */
+/***************************************************************************/
+
+static errorType OnGetPercentOfPlayersWithScoreInBounds(void* DS, const char* const command) {
+    int groupID;
+    int score;
+    int lowerLevel;
+    int higherLevel;
+    ValidateRead(sscanf(command, "%d %d %d %d", &groupID, &score, &lowerLevel, &higherLevel), 4,
+                 "GetPercentOfPlayersWithScoreInBounds failed.\n");
+    double players = 0.0;
+    StatusType res = GetPercentOfPlayersWithScoreInBounds(DS, groupID, score, lowerLevel, higherLevel, &players);
+
+    if (res != SUCCESS) {
+        printf("GetPercentOfPlayersWithScoreInBounds: %s\n", ReturnValToStr(res));
+        return error_free;
+    }
+
+    printf("GetPercentOfPlayersWithScoreInBounds: %.2f\n", players);
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnAverageHighestPlayerLevelByGroup                                                        */
+/***************************************************************************/
+
+static errorType OnAverageHighestPlayerLevelByGroup(void* DS, const char* const command) {
+    int groupID;
+    int m;
+    ValidateRead(sscanf(command, "%d %d", &groupID, &m), 2,
+                 "AverageHighestPlayerLevelByGroup failed.\n");
+    double level = 0.0;
+    StatusType res = AverageHighestPlayerLevelByGroup(DS, groupID, m, &level);
+
+    if (res != SUCCESS) {
+        printf("AverageHighestPlayerLevelByGroup: %s\n", ReturnValToStr(res));
+        return error_free;
+    }
+
+    printf("AverageHighestPlayerLevelByGroup: %.2f\n", level);
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnGetPlayersBound                                                        */
+/***************************************************************************/
+
+static errorType OnGetPlayersBound(void* DS, const char* const command) {
+    int groupID;
+    int score;
+    int m;
+    ValidateRead(sscanf(command, "%d %d %d", &groupID, &score, &m), 3,
+                 "GetPlayersBound failed.\n");
+    int lowerBoundPlayers = 0;
+    int higherBoundPlayers = 0;
+    StatusType res = GetPlayersBound(DS, groupID, score, m, &lowerBoundPlayers, &higherBoundPlayers);
+
+    if (res != SUCCESS) {
+        printf("GetPlayersBound: %s\n", ReturnValToStr(res));
+        return error_free;
+    }
+
+    printf("GetPlayersBound: %d %d\n", lowerBoundPlayers, higherBoundPlayers);
+
+    return error_free;
+}
+
+/***************************************************************************/
+/* OnQuit                                                                  */
+/***************************************************************************/
+static errorType OnQuit(void** DS, const char* const command) {
+    Quit(DS);
+    if (*DS != NULL) {
+        printf("Quit failed.\n");
+        return error;
+    };
+
+    isInit = false;
+    printf("Quit done.\n");
+
+    return error_free;
+}
+
+#ifdef __cplusplus
+}
+#endif

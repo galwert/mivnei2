@@ -43,7 +43,7 @@ namespace Ehsan {
         ~BSTNode() = default;
 
         int getSum() {
-            if (this == nullptr) {
+            if (this == nullptr) { // ?
                 return 0;
             }
             if (this->left == nullptr && this->right == nullptr) {
@@ -123,6 +123,30 @@ namespace Ehsan {
             return (countNodes(node->left) + countNodes(node->right) + 1);
         }
         void removeInternal(BSTNode<T,S> *node);
+
+        static BSTNode<T,S> *getLeftestNode(BSTNode<T,S> *root)
+        {
+            if (root != nullptr)
+            {
+                while (root->left != nullptr)
+                {
+                    root = root ->left;
+                }
+            }
+            return root;
+        }
+
+        static BSTNode<T,S> *getMostRightNode(BSTNode<T,S> *root)
+        {
+            if (root != nullptr)
+            {
+                while (root->right != nullptr)
+                {
+                    root = root ->right;
+                }
+            }
+            return root;
+        }
 
         static BSTNode<T,S> *leftRotate(BSTNode<T,S> *x) {
 
@@ -209,7 +233,7 @@ namespace Ehsan {
 
         void merge(T *a, S *a_h , int na, T *b,S *b_h, int nb, T *c,S *c_h);
 
-        void uniteTrees(const RankTree<T,S> &other);
+        void uniteTrees(RankTree<T,S> &other);
 
         RankTree(const RankTree &tree);
 
@@ -449,7 +473,7 @@ namespace Ehsan {
                 return curr;
         }
         return curr;
-    }
+    }   
     template<class T,class S>
     int RankTree<T,S>::calcHeightDiff(BSTNode<T,S> *node) {
         return node->left->getHeight() - node->right->getHeight();
@@ -599,7 +623,7 @@ namespace Ehsan {
     }
 
     template<class T, class S>
-    void RankTree<T, S>::uniteTrees(const RankTree<T, S> &other)
+    void RankTree<T, S>::uniteTrees(RankTree<T, S> &other)
     {
         int this_nodes = countNodes(this->root);
         int other_nodes =  countNodes(other.root);

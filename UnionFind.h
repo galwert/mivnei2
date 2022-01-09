@@ -15,6 +15,7 @@ namespace Ehsan
         int *size;//an array
         int *parent;//an array
         T *data;//an array
+        int scale;//additional info
         //explanation:
         //the array size : is an array of the elements including the size of element i.
         //the array parent : is an array including the parent of a given element such 
@@ -41,7 +42,7 @@ namespace Ehsan
         {
             parent[i] = i;
             size[i] = 0;
-            data[i]=new T(scale);
+            // data[i]=new T(scale);
         }
     }
     
@@ -50,10 +51,10 @@ namespace Ehsan
     {
         delete[] size;
         delete[] parent;
-        for (int i = 0; i < (numberOfElements+1) ; i++)
-        {
-            delete data[i];
-        }
+        // for (int i = 0; i < (numberOfElements+1) ; i++)
+        // {
+        //     delete data[i];
+        // }
         delete[] data;
     }
     
@@ -98,7 +99,16 @@ namespace Ehsan
     void UnionFind<T>::Merge(T& to_grow,int to_grow_index, T& to_delete,int to_delete_index)
     {
         to_grow += to_delete;
-        delete to_delete;
+        // MergeGeneric(to_grow,to_delete);
+        // delete to_delete;
+        /**
+         * **
+         * **
+         * **
+         * **
+         * **
+         * should delete the to_delete group
+         */
         parent[to_delete_index] =  to_grow_index;
         increasesize(to_grow_index,size[to_delete_index]);
         // data[to_delete] = nullptr;
