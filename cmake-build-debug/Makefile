@@ -231,6 +231,60 @@ RankTree.cpp.s:
 	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/RankTree.cpp.s
 .PHONY : RankTree.cpp.s
 
+SivansGame.o: SivansGame.cpp.o
+
+.PHONY : SivansGame.o
+
+# target to build an object file
+SivansGame.cpp.o:
+	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/SivansGame.cpp.o
+.PHONY : SivansGame.cpp.o
+
+SivansGame.i: SivansGame.cpp.i
+
+.PHONY : SivansGame.i
+
+# target to preprocess a source file
+SivansGame.cpp.i:
+	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/SivansGame.cpp.i
+.PHONY : SivansGame.cpp.i
+
+SivansGame.s: SivansGame.cpp.s
+
+.PHONY : SivansGame.s
+
+# target to generate assembly for a file
+SivansGame.cpp.s:
+	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/SivansGame.cpp.s
+.PHONY : SivansGame.cpp.s
+
+library2.o: library2.cpp.o
+
+.PHONY : library2.o
+
+# target to build an object file
+library2.cpp.o:
+	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/library2.cpp.o
+.PHONY : library2.cpp.o
+
+library2.i: library2.cpp.i
+
+.PHONY : library2.i
+
+# target to preprocess a source file
+library2.cpp.i:
+	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/library2.cpp.i
+.PHONY : library2.cpp.i
+
+library2.s: library2.cpp.s
+
+.PHONY : library2.s
+
+# target to generate assembly for a file
+library2.cpp.s:
+	$(MAKE) -f CMakeFiles/wet2.dir/build.make CMakeFiles/wet2.dir/library2.cpp.s
+.PHONY : library2.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -279,6 +333,12 @@ help:
 	@echo "... RankTree.o"
 	@echo "... RankTree.i"
 	@echo "... RankTree.s"
+	@echo "... SivansGame.o"
+	@echo "... SivansGame.i"
+	@echo "... SivansGame.s"
+	@echo "... library2.o"
+	@echo "... library2.i"
+	@echo "... library2.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

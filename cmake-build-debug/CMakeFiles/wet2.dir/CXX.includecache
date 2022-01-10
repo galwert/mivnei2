@@ -1,0 +1,56 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
+library2.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/library2.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Exceptions.h
+iostream
+-
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Group.h
+RankTree.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/RankTree.h
+DynamicArray.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/DynamicArray.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Player.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/RankTree.h
+cstdlib
+-
+algorithm
+-
+ctgmath
+-
+iostream
+-
+memory
+-
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/SivansGame.cpp
+SivansGame.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/SivansGame.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/SivansGame.h
+UnionFind.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/UnionFind.h
+Player.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Player.h
+Group.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Group.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/UnionFind.h
+Exceptions.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Exceptions.h
+Group.h
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Group.h
+
+/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/library2.h
+

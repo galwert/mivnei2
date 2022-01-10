@@ -3,7 +3,7 @@
 
 
 #include "Exceptions.h"
-
+#include "Group.h"
 namespace Ehsan
 {
 
@@ -14,7 +14,7 @@ namespace Ehsan
         int numberOfElements;
         int *size;//an array
         int *parent;//an array
-        T *data;//an array
+        T **data;//an array
         int scale;//additional info
         //explanation:
         //the array size : is an array of the elements including the size of element i.
@@ -27,7 +27,7 @@ namespace Ehsan
         ~UnionFind();
         int Find(int i);
         void increasesize(int group_id, int increase = 1);
-        void Merge(T& to_grow,int to_grow_index, T& to_delete,int to_delete_index);
+        void Merge(T* to_grow,int to_grow_index, T* to_delete,int to_delete_index);
         void Union(int p,int q);
     };
     
@@ -36,13 +36,14 @@ namespace Ehsan
     numberOfElements(numberOfElements),
     size(new int[numberOfElements + 1]()),
     parent(new int[numberOfElements + 1]()),
-    data(new T[numberOfElements+1]())
+    data(new T*[numberOfElements+1]()),
+    scale(scale)
     {
         for (int i = 0; i < (numberOfElements+1) ; i++)
         {
             parent[i] = i;
             size[i] = 0;
-            // data[i]=new T(scale);
+             data[i]=new T(scale);
         }
     }
     
@@ -51,10 +52,10 @@ namespace Ehsan
     {
         delete[] size;
         delete[] parent;
-        // for (int i = 0; i < (numberOfElements+1) ; i++)
-        // {
-        //     delete data[i];
-        // }
+//         for (int i = 0; i < (numberOfElements+1) ; i++)
+//         {
+//             delete data[i];
+//         }
         delete[] data;
     }
     
@@ -62,7 +63,7 @@ namespace Ehsan
     int UnionFind<T>::Find(int i)
     {
         //check that the group is legal
-        if ( i < 0 || i >= numberOfElements)// is : 1 <= groupID < k ?
+        if ( i < 0 || i > numberOfElements)// is : 1 <= groupID < k ?
         {
             return -1;
         }
@@ -96,9 +97,9 @@ namespace Ehsan
     }
 
     template<class T>
-    void UnionFind<T>::Merge(T& to_grow,int to_grow_index, T& to_delete,int to_delete_index)
+    void UnionFind<T>::Merge(T* to_grow,int to_grow_index, T* to_delete,int to_delete_index)
     {
-        to_grow += to_delete;
+        ((Group*)(to_grow))->mergeGroups((Group*)(to_delete));
         // MergeGeneric(to_grow,to_delete);
         // delete to_delete;
         /**
@@ -127,8 +128,8 @@ namespace Ehsan
         // find the groups that you want to Union
         int group_1_index = Find(q);
         int group_2_index = Find(p);
-        T& group_1 = data[group_1_index];
-        T& group_2 = data[group_2_index];
+        T* group_1 = data[group_1_index];
+        T* group_2 = data[group_2_index];
         
         // Unite the groups according to size
         if (size[group_1_index] <= size[group_2_index])

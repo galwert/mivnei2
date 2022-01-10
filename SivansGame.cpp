@@ -14,7 +14,7 @@ level_zero_scale( new int[scale+1]),
 players(new DynamicArray<Player>(ARRAY_SIZE,BALANCE_FACTOR))
 {
     for (int i = 1; i <= scale; i++) {
-        players_by_scale[i] = new RankTree<int,int>();// needed?
+        players_by_scale[i] = new RankTree<int,int>();
         level_zero_scale[i] = 0;
     }
 
@@ -26,7 +26,7 @@ SivansGame::~SivansGame()
         delete players_by_scale[i];
     }
     delete[] level_zero_scale;
-    delete groups; 
+    delete groups;
     delete players_by_level;
     delete players;
 }
@@ -34,13 +34,9 @@ SivansGame::~SivansGame()
 
 Player* SivansGame::FindPlayer(int player_id)
 {
-    Player* to_find = new Player(); // have to delete - probably in the calling function?
-    /*
-    *
-    * PAY ATTENTION!!!!!!!!!!!!!!! 
-    */
-    this->players->find(player_id,to_find); // should check for nullptr?
-    return to_find;
+    //Player *to_find = Player();// have to delete - probably in the calling function?
+    //this->players->find(player_id,to_find); // should check for nullptr?
+    return this->players->find(player_id);
 }
 Group* SivansGame::FindGroup(int group_id)
 {
@@ -50,7 +46,7 @@ Group* SivansGame::FindGroup(int group_id)
     {
         return nullptr; // in case the groups doesnt exist
     }
-    to_find = groups->data+index;
+    to_find =groups->data[index];
     return to_find;
 }
 
@@ -89,7 +85,7 @@ StatusType SivansGame::AddPlayer(int PlayerID, int GroupID, int score) {
         return INVALID_INPUT;
     }
     // checking if the players already exists
-    if(this->players->insert(PlayerID, Player(GroupID,PlayerID,0,score))!=SUCCESS) 
+    if(this->players->insert(PlayerID, new Player(GroupID,PlayerID,0,score))!=SUCCESS)
     {
         return FAILURE;
     }
@@ -113,13 +109,14 @@ void SivansGame::RemovePlayerFromGroupHelper(Player* player,Group* player_group,
     {
         player_group->players_by_scale[score]->find(level)->decreaseAllNodesInTrack();
         player_group->players_by_level->find(level)->decreaseAllNodesInTrack();
-        player_group->players_by_scale[score]->find(level)->data--;
-        player_group->players_by_level->find(level)->data--;
+//        player_group->players_by_scale[score]->find(level)->data--;
+//        player_group->players_by_level->find(level)->data--; done in decrease function
     }
     BSTNode<int,int> *player_node = players_by_level->find(level);
     if( (player_node != nullptr) && (level != 0) &&  (player_node->data == 0) )
     {
         player_group->players_by_level->remove(level);
+        player_group->players_by_scale[score]->remove(level);
     }
 }
 
@@ -135,13 +132,14 @@ void SivansGame::RemovePlayerFromSivanHelper(int PlayerID,int score,int level)
     {
         players_by_scale[score]->find(level)->decreaseAllNodesInTrack();
         players_by_level->find(level)->decreaseAllNodesInTrack();
-        players_by_level->find(level)->data--;
-        players_by_scale[score]->find(level)->data--;
+        //players_by_level->find(level)->data--;
+        //players_by_scale[score]->find(level)->data--; done in decrease function
     }
     BSTNode<int,int> *player_node = players_by_level->find(level);
     if( (player_node != nullptr) && (level != 0) &&  (player_node->data == 0) )
     {
         players_by_level->remove(level);
+        players_by_scale[score]->remove(level);
     }
     return;
 }
@@ -177,8 +175,8 @@ void SivansGame::RemovePlayerFromOldLevelInSivan(Player* player)
     {
         players_by_scale[player->score]->find(player->level)->decreaseAllNodesInTrack();
         players_by_level->find(player->level)->decreaseAllNodesInTrack();
-        players_by_level->find(player->level)->data--;
-        players_by_scale[player->score]->find(player->level)->data--;
+//        players_by_level->find(player->level)->data--;
+//        players_by_scale[player->score]->find(player->level)->data--;
     }
     if( (player->level != 0) && (players_by_level->find(player->level)->data == 0) )
     {
@@ -189,7 +187,6 @@ void SivansGame::RemovePlayerFromOldLevelInGroup(Player* player, Group* group)
 {
     int group_index = this->groups->Find(player->original_group);
     // group_to_find->num_of_players--; // no need because we're gonna readd him in a sec
-    this->groups->size[group_index]--;
     if(player->level == 0)
     {
         group->level_zero_level--;
@@ -199,8 +196,8 @@ void SivansGame::RemovePlayerFromOldLevelInGroup(Player* player, Group* group)
     {
         group->players_by_scale[player->score]->find(player->level)->decreaseAllNodesInTrack();
         group->players_by_level->find(player->level)->decreaseAllNodesInTrack();
-        group->players_by_scale[player->score]->find(player->level)->data--;
-        group->players_by_level->find(player->level)->data--;
+//        group->players_by_scale[player->score]->find(player->level)->data--;
+//        group->players_by_level->find(player->level)->data--;
     }
     if( (player->level != 0) && (group->players_by_level->find(player->level)->data == 0) )
     {
@@ -217,8 +214,8 @@ void SivansGame::AddPlayerToNewLevelInGroup(Player* player, Group* group)
     }
     group->players_by_scale[player->score]->find(player->level)->increaseAllNodesInTrack();
     group->players_by_level->find(player->level)->increaseAllNodesInTrack();
-    group->players_by_level->find(player->level)->data++;
-    group->players_by_scale[player->score]->find(player->level)->data++;
+//    group->players_by_level->find(player->level)->data++;
+//    group->players_by_scale[player->score]->find(player->level)->data++;
     return;  
 }
 void SivansGame::AddPlayerToNewLevelInSivan(Player* player)
@@ -227,13 +224,12 @@ void SivansGame::AddPlayerToNewLevelInSivan(Player* player)
     {
         players_by_scale[player->score]->insert(player->level,0);// correct insertion - saleh?
         players_by_level->insert(player->level,0);// correct insertion - saleh?
-        
     }
     players_by_scale[player->score]->find(player->level)->increaseAllNodesInTrack();
     players_by_level->find(player->level)->increaseAllNodesInTrack();
-    players_by_level->find(player->level)->data++;
-    players_by_scale[player->score]->find(player->level)->data++;
-    
+//    players_by_level->find(player->level)->data++;
+//    players_by_scale[player->score]->find(player->level)->data++;
+//
     
     return;
 }
@@ -267,13 +263,22 @@ void SivansGame::UpdateScoreInGroup(Player* player,Group* group,int OldScore, in
 {
     if (player->level == 0)
     {
-        level_zero_scale[OldScore]--;
+        group->level_zero_scale[OldScore]--;
+        group->level_zero_scale[NewScore]++;
     }
     else
     {
         group->players_by_scale[OldScore]->find(player->level)->decreaseAllNodesInTrack();
+        if(group->players_by_scale[OldScore]->find(player->level)->data==0)
+        {
+            group->players_by_scale[OldScore]->remove(player->level);
+        }
+        if(group->players_by_scale[NewScore]->find(player->level)== nullptr)
+        {
+            group->players_by_scale[NewScore]->insert(player->level,0);
+        }
+        group->players_by_scale[NewScore]->find(player->level)->increaseAllNodesInTrack();
     }
-    group->players_by_scale[NewScore]->find(player->level)->increaseAllNodesInTrack();
     // group->players_by_level->find(player->level) // no need because we don't change the level
 }
 
@@ -282,12 +287,21 @@ void SivansGame::UpdateScoreInSivan(Player* player,int OldScore, int NewScore)
     if (player->level == 0)
     {
         level_zero_scale[OldScore]--;
+        level_zero_scale[NewScore]++;
     }
     else
     {
         this->players_by_scale[OldScore]->find(player->level)->decreaseAllNodesInTrack();
+        if(this->players_by_scale[OldScore]->find(player->level)->data==0)
+        {
+            this->players_by_scale[OldScore]->remove(player->level);
+        }
+        if(this->players_by_scale[NewScore]->find(player->level)== nullptr)
+        {
+            this->players_by_scale[NewScore]->insert(player->level,0);
+        }
+        this->players_by_scale[NewScore]->find(player->level)->increaseAllNodesInTrack();
     }
-    this->players_by_scale[NewScore]->find(player->level)->increaseAllNodesInTrack();
     // this->players_by_level->find(player->level) // no need because we don't change the level
 }
 
@@ -307,21 +321,21 @@ StatusType SivansGame::ChangePlayerIDScore(int PlayerID, int NewScore)
     
     UpdateScoreInSivan(player_to_find,player_to_find->score,NewScore); // correct?
     UpdateScoreInGroup(player_to_find,group_to_find,player_to_find->score,NewScore); // correct?
-    
+   player_to_find->score=NewScore;
     return SUCCESS;
 }
 
 int SivansGame::GetNumberOfPlayersWithScoreInBounds(RankTree<int,int>** players_by_scale,int *level_zero_scale,int score, int lowerlevel, int higherlevel)
 {
-    int lower_level_sum = level_zero_scale[score];// need to check for the levels!
-    if (lowerlevel != 0)
+    int lower_level_sum=0;
+    int higher_level_sum =0;
+    if (lowerlevel == 0)
     {
-        lower_level_sum = players_by_scale[score]->find(lowerlevel)->getSum();
+        lower_level_sum = level_zero_scale[score];
     }
-    
-    int higher_level_sum = players_by_scale[score]->find(higherlevel)->getSum();
-    int higher_level_data_number = players_by_scale[score]->find(higherlevel)->data;
-    return (lower_level_sum - higher_level_sum + higher_level_data_number);
+    lower_level_sum += players_by_scale[score]->selectSumForScoreInBoundMin(lowerlevel);
+    higher_level_sum += players_by_scale[score]->selectSumForScoreInBoundMax(higherlevel);
+    return (higher_level_sum-lower_level_sum);
     
 }
 
@@ -338,15 +352,15 @@ int SivansGame::GetTotalNumberOfPlayersBounds(RankTree<int,int> *players_by_leve
 StatusType SivansGame::GetPercentOfPlayersWithScoreInBoundsHelper(RankTree<int,int>** players_scale,RankTree<int,int> *players_level,
                                                                                 int *levelzero_scale,int score,int lowerLevel,int higherLevel,double * players)
 {
-    BSTNode<int,int>* most_right_node =  RankTree<int,int>::getMostRightNode(this->players_by_level->root);
+    BSTNode<int,int>* most_right_node =  RankTree<int,int>::getMostRightNode(players_scale[score]->root);
     int highest_level = 0;
     if (most_right_node != nullptr)
     {
-        highest_level = RankTree<int,int>::getMostRightNode(this->players_by_level->root)->key;
+        highest_level =most_right_node->key;
     }
     
     // int highest_level = RankTree<int,int>::getMostRightNode(this->players_by_level->root)->key;
-    if (higherLevel < 0 || lowerLevel > highest_level )
+    if (higherLevel <= 0 ||highest_level==0|| lowerLevel > highest_level )
     {
         return FAILURE;
     }
@@ -365,7 +379,8 @@ StatusType SivansGame::GetPercentOfPlayersWithScoreInBoundsHelper(RankTree<int,i
     {
         return FAILURE;
     }
-    int total_number_of_people_in_interval = GetTotalNumberOfPlayersBounds(players_level,lowerLevel,higherLevel);
+    //int total_number_of_people_in_interval = GetTotalNumberOfPlayersBounds(players_level,lowerLevel,higherLevel);
+    int total_number_of_people_in_interval=players_scale[score]->root->sum+this->level_zero_scale[score];
     *players = (double)number_of_players_in_bound/(double)total_number_of_people_in_interval;
     return SUCCESS;
 }
@@ -373,7 +388,7 @@ StatusType SivansGame::GetPercentOfPlayersWithScoreInBoundsHelper(RankTree<int,i
 StatusType SivansGame::GetPercentOfPlayersWithScoreInBounds(int GroupID, int score, int lowerLevel, 
                                                                             int higherLevel,double * players)
 {
-    if (GroupID < 0 || GroupID > this->groups->numberOfElements || players == nullptr)
+    if (GroupID < 0 || GroupID > this->groups->numberOfElements || players == nullptr||score>scale||score<=0)
     {
         return INVALID_INPUT;
     }
@@ -478,5 +493,6 @@ StatusType SivansGame::AverageHighestPlayerLevelByGroup(int GroupID, int m, doub
 
 void SivansGame::QuitGame(SivansGame* game)
 {
-    delete game;
+
+    game= nullptr;
 }

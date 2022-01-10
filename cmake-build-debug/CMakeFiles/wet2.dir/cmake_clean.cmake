@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/wet2.dir/Group.cpp.o"
   "CMakeFiles/wet2.dir/Player.cpp.o"
   "CMakeFiles/wet2.dir/RankTree.cpp.o"
+  "CMakeFiles/wet2.dir/SivansGame.cpp.o"
+  "CMakeFiles/wet2.dir/library2.cpp.o"
   "CMakeFiles/wet2.dir/main.cpp.o"
   "wet2"
   "wet2.pdb"

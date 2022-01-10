@@ -8,6 +8,8 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Group.cpp" "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/cmake-build-debug/CMakeFiles/wet2.dir/Group.cpp.o"
   "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/Player.cpp" "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/cmake-build-debug/CMakeFiles/wet2.dir/Player.cpp.o"
   "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/RankTree.cpp" "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/cmake-build-debug/CMakeFiles/wet2.dir/RankTree.cpp.o"
+  "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/SivansGame.cpp" "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/cmake-build-debug/CMakeFiles/wet2.dir/SivansGame.cpp.o"
+  "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/library2.cpp" "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/cmake-build-debug/CMakeFiles/wet2.dir/library2.cpp.o"
   "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/main.cpp" "/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/cmake-build-debug/CMakeFiles/wet2.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

@@ -106,10 +106,16 @@
 		<Unit filename="/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/RankTree.h">
 			<Option target="wet2"/>
 		</Unit>
+		<Unit filename="/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/SivansGame.cpp">
+			<Option target="wet2"/>
+		</Unit>
 		<Unit filename="/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/SivansGame.h">
 			<Option target="wet2"/>
 		</Unit>
 		<Unit filename="/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/UnionFind.h">
+			<Option target="wet2"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/library2.cpp">
 			<Option target="wet2"/>
 		</Unit>
 		<Unit filename="/mnt/c/Users/galwe/OneDrive/Desktop/technion/סמסטר ג/מבני נתונים/wet2/library2.h">

@@ -1,0 +1,15 @@
+Init 4 6
+AddPlayer 10 1 2
+AddPlayer 11 2 3
+AddPlayer 9 0 2
+AddPlayer 7 1 5
+AddPlayer 12 1 4
+AddPlayer 20 1 5
+IncreasePlayerIDLevel 10 2
+IncreasePlayerIDLevel 12 3
+ChangePlayerIDScore 10 3
+GetPercentOfPlayersWithScoreInBounds 0 3 1 5
+MergeGroups 1 2
+RemovePlayer 20
+AverageHighestPlayerLevelByGroup 2 3
+Quit

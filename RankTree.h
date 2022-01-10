@@ -88,18 +88,20 @@ namespace Ehsan {
         void increaseAllNodesInTrack()
         {
             BSTNode<T,S> *node =this;
+            node->data++;
             while(node!= nullptr)
             {
-                this->sum++;
+                node->sum++;
                 node=node->parent;
             }
         }
         void decreaseAllNodesInTrack()
         {
             BSTNode<T,S> *node =this;
+            node->data--;
             while(node!= nullptr)
             {
-                this->sum--;
+                node->sum--;
                 node=node->parent;
             }
         }
@@ -256,7 +258,17 @@ namespace Ehsan {
         static int calcHeightDiff(BSTNode<T,S> *node);
 
 
+        int FindInBoundMax(S key);
 
+        int selectSumMin(int sum);
+
+        int selectSumMax(int sum);
+
+        int selectSumForAvgLevels(int sum);
+
+        int selectSumForScoreInBoundMax(int level);
+
+        int selectSumForScoreInBoundMin(int level);
     }; //-------------------------------RankTree END---------------------------
 
 
@@ -281,7 +293,8 @@ namespace Ehsan {
             right(nullptr),
             parent(nullptr),
             height(1),
-            rank(1)
+            rank(1),
+            sum((int)data)
     {}
 
     template<class T,class S>
@@ -442,6 +455,140 @@ namespace Ehsan {
             return nullptr;
         }
         return selectInternal(this->root,rank);
+    }
+
+    template<class T,class S>
+    int selectSumForAvgLevelsInternal(BSTNode<T,S> *node,int sum) {
+        if (node->left->sum <= sum&&node->left->sum+node->data >= sum ) {
+            return node->right->sum;
+        }
+        if (node->left->sum > sum) {
+            selectSumForAvgLevelsInternal(node->left, sum);
+        } else {
+            selectSumForAvgLevelsInternal(node->right, sum-node->left->sum-node->data);
+        }
+    }
+    template<class T,class S>
+    int RankTree<T,S>::selectSumForAvgLevels(int sum) {
+        if(sum<this->root->sum)
+        {
+            return 0;
+        }
+        return selectSumMaxInternal(this->root,sum);
+    }
+    template<class T,class S>
+    int selectSumForScoreInBoundMaxInternal(BSTNode<T,S> *node,int rank) {
+      int sum=node->sum;
+        if(node->rank==rank)
+        {
+            if(node->right== nullptr)
+            {
+                return node->sum;
+            }
+            return node->sum-node->right->sum;
+        }
+        if (node->left->sum > rank) {
+            selectSumForScoreInBoundMaxInternal(node->left, rank);
+        } else {
+            selectSumForScoreInBoundMaxInternal(node->right, rank-node->left->sum-node->data);
+        }
+    }
+    template<class T,class S>
+    int RankTree<T,S>::selectSumForScoreInBoundMax(int level) {
+       // return selectSumMaxInternal(this->root,rank);
+        if(this->root== nullptr)
+        {
+            return 0;
+        }
+       int sum=this->root->sum;
+        BSTNode<T,S> *node= this->root;
+       while(node!= nullptr)
+       {
+           if(node->key==level)
+           {
+               if(node->right!= nullptr)
+               {
+                   return node->sum-node->right->sum;
+               }
+               return node->sum;
+           }
+           else if(node->key<level)
+           {
+               node=node->right;
+           }
+           else if(node->key>level)
+           {
+               if(node->right!= nullptr)
+               {
+                   sum-=node->right->sum;
+               }
+               node=node->left;
+           }
+       }
+        return this->root->sum-sum;
+    }
+    template<class T,class S>
+    int RankTree<T,S>::selectSumForScoreInBoundMin(int level) {
+        // return selectSumMaxInternal(this->root,rank);
+        if(this->root== nullptr)
+        {
+            return 0;
+        }
+        int sum=this->root->sum;
+        BSTNode<T,S> *node= this->root;
+        while(node!= nullptr)
+        {
+            if(node->key==level)
+            {
+                if(node->right!= nullptr)
+                {
+                    return node->sum-node->left->sum;
+                }
+                return node->sum;
+            }
+            else if(node->key<level)
+            {
+                if(node->left!= nullptr)
+                {
+                    sum -= node->left->sum;
+                }
+                node=node->right;
+            }
+            else if(node->key>level)
+            {
+                node=node->left;
+            }
+        }
+        return this->root->sum-sum;
+    }
+    template<class T,class S>
+    int RankTree<T,S>::FindInBoundMax(S key)
+    {
+        BSTNode<T,S> * node=this->root,*prev;
+
+        while(node!= nullptr)
+        {
+            prev=node;
+            if(key==node->key)
+            {
+                if(node->right!= nullptr)
+                {
+                    return node->right->sum;
+                } else
+                {
+                    return 0;
+                }
+            }
+            if(key>node->key)
+            {
+                node=node->right;
+            }
+            else
+            {
+                node=node->left;
+            }
+        }
+
     }
     template<class T,class S>
     BSTNode<T,S> *RankTree<T,S>::insert(S key, T data) {
@@ -633,9 +780,9 @@ namespace Ehsan {
         }
         if(this_nodes+other_nodes==1)
         {
-            if(this_nodes==1)
+            if(other_nodes==1)
             {
-                other.root=this->root;
+                this->root=other.root;
             }
             return;
         }

@@ -25,7 +25,7 @@ namespace Ehsan
         SivansGame(int num_of_groups, int scale);
         ~SivansGame();
 
-        Player* FindPlayer(int player_id);
+        Player *FindPlayer(int player_id);
         Group* FindGroup(int group_id);
         void AddPlayerHelper(int PlayerID, Group* player_group, int GroupID, int score);
         void RemovePlayerFromGroupHelper(Player* player,Group* player_group,int score,int level);

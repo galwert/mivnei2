@@ -11,7 +11,7 @@ namespace Ehsan {
     class ListNode//---------------ListNode-----------------------------
     {
     public:
-        T data;
+        T* data;
         ListNode *next;
         int id;
 
@@ -21,7 +21,7 @@ namespace Ehsan {
         id(id)
         { }
 
-        ListNode(T data,ListNode<T>* next,int id):
+        ListNode(T* data,ListNode<T>* next,int id):
         data(data),
         next(next),
         id(id)
@@ -37,7 +37,7 @@ namespace Ehsan {
         List():head(nullptr)
         {}
 
-        void insert(T data,int id)
+        void insert(T* data,int id)
         {
 
             this->head = new ListNode<T>(data,head,id);
@@ -69,10 +69,10 @@ namespace Ehsan {
         }
         ListNode<T> *find(int id)
         {
-            // if(this== nullptr) // not possible because if this == nullptr then it's a segmentation fault
-            // {
-            //     return nullptr;
-            // }
+             if(this== nullptr)
+             {
+                 return nullptr;
+             }
             ListNode<T> *node = this->head;
             while(node != nullptr)
             {
@@ -103,7 +103,7 @@ namespace Ehsan {
 
         DynamicArray() = delete;
 
-        StatusType insert(int id,T data)
+        StatusType insert(int id,T* data)
         {
             if((this->balance_factor*this->size)<this->node_count)
             {
@@ -112,15 +112,15 @@ namespace Ehsan {
                 List<T>** new_array=new List<T>*[2*size];
                for(int i=0;i<size;i++)
                {
-                   node = array[i]->head;
-                   while(node!= nullptr)
-                   {
-                       if(new_array[node->id%(2*size)]== nullptr)
-                       {
-                           new_array[node->id%(2*size)]=new List<T>();
+                   if(array[i]!= nullptr) {
+                       node = array[i]->head;
+                       while (node != nullptr) {
+                           if (new_array[node->id % (2 * size)] == nullptr) {
+                               new_array[node->id % (2 * size)] = new List<T>();
+                           }
+                           new_array[node->id % (2 * size)]->insert(node->data, node->id);
+                           node = node->next;
                        }
-                       new_array[node->id%(2*size)]->insert(node->data,node->id);
-                       node=node->next;
                    }
                }
                 delete array;
@@ -144,29 +144,25 @@ namespace Ehsan {
             node_count++;
             return SUCCESS;
         }
-        StatusType find(int id,T* data)
+        T* find(int id)
         {
             if( array[id%size]->find(id)== nullptr)
             {
-                return FAILURE;
+                return nullptr;
             }
             else
             {
-                *data = array[id%size]->find(id)->data;
-            } 
-            return SUCCESS;
+                return array[id%size]->find(id)->data;
+            }
         }
        StatusType remove(int id)
         {
-            T* temp = new T();
-            if(find(id,temp) == FAILURE)
+            if(find(id) == nullptr)
             {
-                delete temp;
                 return FAILURE;
             }
             else
             {
-                delete temp;
                 node_count--;
                 array[id%size]->remove(id);
                 return SUCCESS;

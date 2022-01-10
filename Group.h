@@ -55,7 +55,7 @@ namespace Ehsan
 
         // friend bool operator<(const Group& first_group,const Group& second_group);
         // friend bool operator>(const Group& first_group,const Group& second_group);
-        Group& operator+=(const Group& other);
+        Group* mergeGroups( Group* other);
         // Group& MergeGeneric(Group& to_grow, Group& other);
 
     };
