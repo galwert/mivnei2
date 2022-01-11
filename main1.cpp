@@ -556,7 +556,8 @@ int main(){
         //shuffle (vector.begin(), vector.end(), std::default_random_engine(seed));
         for (std::vector<int>::iterator it = vector.begin() ; it != vector.end(); ++it){
             print2D(tree.root);
-            tree.find(*it)->decreaseAllNodesInTrack();
+            std::cout<<*it<<"   "<< tree.selectSumForScoreInBoundMin(*it);
+
 
         }
           std::cout<<std::endl;

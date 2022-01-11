@@ -495,12 +495,11 @@ namespace Ehsan {
     }
     template<class T,class S>
     int RankTree<T,S>::selectSumForScoreInBoundMax(int level) {
-       // return selectSumMaxInternal(this->root,rank);
         if(this->root== nullptr)
         {
             return 0;
         }
-       int sum=this->root->sum;
+       int sum=0;
         BSTNode<T,S> *node= this->root;
        while(node!= nullptr)
        {
@@ -508,9 +507,9 @@ namespace Ehsan {
            {
                if(node->right!= nullptr)
                {
-                   return node->sum-node->right->sum;
+                   return sum+node->right->sum;
                }
-               return node->sum;
+               return sum;
            }
            else if(node->key<level)
            {
@@ -520,37 +519,44 @@ namespace Ehsan {
            {
                if(node->right!= nullptr)
                {
-                   sum-=node->right->sum;
+                   sum+=node->data+node->right->sum;
+               }
+               else
+               {
+                   sum+=node->data;
                }
                node=node->left;
            }
        }
-        return this->root->sum-sum;
+        return sum;
     }
     template<class T,class S>
     int RankTree<T,S>::selectSumForScoreInBoundMin(int level) {
-        // return selectSumMaxInternal(this->root,rank);
         if(this->root== nullptr)
         {
             return 0;
         }
-        int sum=this->root->sum;
+        int sum=0;
         BSTNode<T,S> *node= this->root;
         while(node!= nullptr)
         {
             if(node->key==level)
             {
-                if(node->right!= nullptr)
+                if(node->left!= nullptr)
                 {
-                    return node->sum-node->left->sum;
+                    return sum+node->left->sum;
                 }
-                return node->sum;
+                return sum;
             }
             else if(node->key<level)
             {
                 if(node->left!= nullptr)
                 {
-                    sum -= node->left->sum;
+                    sum+=node->data+node->left->sum;
+                }
+                else
+                {
+                    sum+=node->data;
                 }
                 node=node->right;
             }
@@ -559,7 +565,7 @@ namespace Ehsan {
                 node=node->left;
             }
         }
-        return this->root->sum-sum;
+        return sum;
     }
     template<class T,class S>
     int RankTree<T,S>::FindInBoundMax(S key)

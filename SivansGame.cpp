@@ -180,6 +180,7 @@ void SivansGame::RemovePlayerFromOldLevelInSivan(Player* player)
     }
     if( (player->level != 0) && (players_by_level->find(player->level)->data == 0) )
     {
+        players_by_scale[player->score]->remove(player->level);
         players_by_level->remove(player->level);
     }
 }
@@ -201,13 +202,15 @@ void SivansGame::RemovePlayerFromOldLevelInGroup(Player* player, Group* group)
     }
     if( (player->level != 0) && (group->players_by_level->find(player->level)->data == 0) )
     {
+        group->players_by_scale[player->score]->remove(player->level);
         group->players_by_level->remove(player->level);
     }
     return;
 }
 void SivansGame::AddPlayerToNewLevelInGroup(Player* player, Group* group)
 {
-    if (group->players_by_scale[player->score]->find(player->level) == nullptr)
+    if (group->players_by_scale[player->score]->find(player->level) == nullptr||
+            group->players_by_level->find(player->level) == nullptr)
     {
         group->players_by_scale[player->score]->insert(player->level,0);// correct insertion - saleh?
         group->players_by_level->insert(player->level,0);// correct insertion - saleh?
@@ -220,7 +223,8 @@ void SivansGame::AddPlayerToNewLevelInGroup(Player* player, Group* group)
 }
 void SivansGame::AddPlayerToNewLevelInSivan(Player* player)
 {
-    if (players_by_scale[player->score]->find(player->level) == nullptr)
+    if (players_by_scale[player->score]->find(player->level) == nullptr||
+    players_by_level->find(player->level) == nullptr)
     {
         players_by_scale[player->score]->insert(player->level,0);// correct insertion - saleh?
         players_by_level->insert(player->level,0);// correct insertion - saleh?
@@ -329,61 +333,37 @@ int SivansGame::GetNumberOfPlayersWithScoreInBounds(RankTree<int,int>** players_
 {
     int lower_level_sum=0;
     int higher_level_sum =0;
-    if (lowerlevel == 0)
+    if (lowerlevel > 0)
     {
         lower_level_sum = level_zero_scale[score];
     }
+    if(players_by_scale[score]->root== nullptr)
+    {
+        return level_zero_scale[score]-lower_level_sum;
+    }
     lower_level_sum += players_by_scale[score]->selectSumForScoreInBoundMin(lowerlevel);
     higher_level_sum += players_by_scale[score]->selectSumForScoreInBoundMax(higherlevel);
-    return (higher_level_sum-lower_level_sum);
+    return (level_zero_scale[score]+players_by_scale[score]->root->sum-higher_level_sum-lower_level_sum);
     
 }
-
-int SivansGame::GetTotalNumberOfPlayersBounds(RankTree<int,int> *players_by_level, int lowerlevel, int higherlevel)
+int SivansGame::GetNumberOfPlayersWithLevelsInBounds(RankTree<int,int>* levels_tree,int level_zero_level, int lowerlevel, int higherlevel)
 {
-    
-    int lower_level_sum = players_by_level->find(lowerlevel)->getSum();
-    int higher_level_sum = players_by_level->find(higherlevel)->getSum();
-    int higher_level_data_number = players_by_level->find(higherlevel)->data;
-    return (lower_level_sum - higher_level_sum + higher_level_data_number);
-    
+    int lower_level_sum=0;
+    int higher_level_sum =0;
+    if (lowerlevel > 0)
+    {
+        lower_level_sum = level_zero_level;
+    }
+    if(levels_tree->root== nullptr)
+    {
+        return level_zero_level-lower_level_sum;
+    }
+    lower_level_sum += levels_tree->selectSumForScoreInBoundMin(lowerlevel);
+    higher_level_sum += levels_tree->selectSumForScoreInBoundMax(higherlevel);
+    return (level_zero_level+levels_tree->root->sum-higher_level_sum-lower_level_sum);
+
 }
 
-StatusType SivansGame::GetPercentOfPlayersWithScoreInBoundsHelper(RankTree<int,int>** players_scale,RankTree<int,int> *players_level,
-                                                                                int *levelzero_scale,int score,int lowerLevel,int higherLevel,double * players)
-{
-    BSTNode<int,int>* most_right_node =  RankTree<int,int>::getMostRightNode(players_scale[score]->root);
-    int highest_level = 0;
-    if (most_right_node != nullptr)
-    {
-        highest_level =most_right_node->key;
-    }
-    
-    // int highest_level = RankTree<int,int>::getMostRightNode(this->players_by_level->root)->key;
-    if (higherLevel <= 0 ||highest_level==0|| lowerLevel > highest_level )
-    {
-        return FAILURE;
-    }
-    int new_lower_level = lowerLevel, new_higher_level = higherLevel;
-    if ( lowerLevel < 0)
-    {
-        new_lower_level = 0;
-    }
-    else if (higherLevel > highest_level)
-    {
-        new_higher_level = highest_level;
-    }
-
-    int number_of_players_in_bound = GetNumberOfPlayersWithScoreInBounds(players_scale,levelzero_scale,score,new_lower_level,new_higher_level);
-    if (number_of_players_in_bound == 0)
-    {
-        return FAILURE;
-    }
-    //int total_number_of_people_in_interval = GetTotalNumberOfPlayersBounds(players_level,lowerLevel,higherLevel);
-    int total_number_of_people_in_interval=players_scale[score]->root->sum+this->level_zero_scale[score];
-    *players = (double)number_of_players_in_bound/(double)total_number_of_people_in_interval;
-    return SUCCESS;
-}
 
 StatusType SivansGame::GetPercentOfPlayersWithScoreInBounds(int GroupID, int score, int lowerLevel, 
                                                                             int higherLevel,double * players)
@@ -392,22 +372,43 @@ StatusType SivansGame::GetPercentOfPlayersWithScoreInBounds(int GroupID, int sco
     {
         return INVALID_INPUT;
     }
-
+    if(higherLevel<0)
+    {
+        return FAILURE;
+    }
+    int total_number_of_people_in_interval;
+    int number_of_players_in_bound;
     if (GroupID == 0)
     {
-        return GetPercentOfPlayersWithScoreInBoundsHelper(this->players_by_scale,this->players_by_level,
-                                                                        this->level_zero_scale,score,lowerLevel,higherLevel,players);
-        
+        if(this->players_by_level->root== nullptr&&this->level_zero_level==0)
+        {
+            return FAILURE;
+        }
+        else {
+                total_number_of_people_in_interval = GetNumberOfPlayersWithLevelsInBounds(this->players_by_level,this->level_zero_level,lowerLevel,higherLevel);
+        }
+        number_of_players_in_bound = 100*GetNumberOfPlayersWithScoreInBounds(this->players_by_scale,level_zero_scale,score,lowerLevel,higherLevel);
     }
     else // if (GroupID > 0)
     {
-        Group* group_to_find = FindGroup(GroupID);
-        return GetPercentOfPlayersWithScoreInBoundsHelper(group_to_find->players_by_scale,group_to_find->players_by_level,
-                                                            group_to_find->level_zero_scale,score,lowerLevel,higherLevel,players);
-        
-    }
 
-    return SUCCESS; // should never get here
+        Group* group_to_find = FindGroup(GroupID);
+        if(group_to_find->players_by_level->root== nullptr&&group_to_find->level_zero_level==0)
+        {
+            return FAILURE;
+        }
+        else {
+            total_number_of_people_in_interval = GetNumberOfPlayersWithLevelsInBounds(group_to_find->players_by_level,group_to_find->level_zero_level,lowerLevel,higherLevel);
+        }
+        number_of_players_in_bound = 100*GetNumberOfPlayersWithScoreInBounds(group_to_find->players_by_scale,group_to_find->level_zero_scale,score,lowerLevel,higherLevel);
+    }
+    if(total_number_of_people_in_interval==0)
+    {
+        return FAILURE;
+    }
+    *players = (double)number_of_players_in_bound/(double)total_number_of_people_in_interval;
+    return SUCCESS;
+
     
 }
 

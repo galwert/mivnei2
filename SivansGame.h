@@ -53,6 +53,10 @@ namespace Ehsan
         // StatusType GetPlayersBound(int GroupID, int score, int m,
         //                                         int * LowerBoundPlayers, int * HigherBoundPlayers);
         static void QuitGame(SivansGame* game);
+
+
+        int GetNumberOfPlayersWithLevelsInBounds(RankTree<int, int> *levels_tree, int level_zero_level, int lowerlevel,
+                                                 int higherlevel);
     };
 
     // SivansGame::SivansGame(int num_of_groups, int scale):
