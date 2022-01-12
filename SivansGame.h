@@ -36,13 +36,7 @@ namespace Ehsan
         void AddPlayerToNewLevelInGroup(Player* player, Group* group);
         void UpdateScoreInSivan(Player* player,int OldScore, int NewScore);
         void UpdateScoreInGroup(Player* player,Group* group,int OldScore, int NewScore);
-        BSTNode<int,int>* SelectNodeWithClosestSum(BSTNode<int,int> *root, int m);
-        // void CalculateAvgLevelsHelper(BSTNode<int,int>* root,int *sum,int *num_of_players,int m);
-        void RemoveExtraPlayersFromCalculation(BSTNode<int,int>* root,int *sum,int *num_of_players,int m);
         int GetNumberOfPlayersWithScoreInBounds(RankTree<int,int>** players_by_scale,int *level_zero_scale,int score, int lowerlevel, int higherlevel);
-        int GetTotalNumberOfPlayersBounds(RankTree<int,int> *players_by_level, int lowerlevel, int higherlevel);
-        StatusType GetPercentOfPlayersWithScoreInBoundsHelper(RankTree<int,int>** players_by_scale,RankTree<int,int> *players_level,
-                                                                    int *levelzero_scale,int score,int lowerLevel,int higherLevel,double * players);
         SivansGame *InitGame(int k, int scale);
         StatusType MergeGroups(int GroupID1, int GroupID2);
         StatusType AddPlayer(int PlayerID, int GroupID, int score);

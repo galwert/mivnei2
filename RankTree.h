@@ -253,7 +253,7 @@ namespace Ehsan {
             treeToArray(keys,data,index,tree_root->right);
         }
 
-        void merge(T *a, S *a_h , int na, T *b,S *b_h, int nb, T *c,S *c_h);
+        int merge(T *a, S *a_h , int na, T *b,S *b_h, int nb, T *c,S *c_h);
 
         void uniteTrees(RankTree<T,S> &other);
 
@@ -770,9 +770,9 @@ namespace Ehsan {
     }
 
     template<class T, class S>
-    void RankTree<T, S>::merge(T *a, S *a_h , int na, T *b,S *b_h, int nb, T *c,S *c_h)
+    int RankTree<T, S>::merge(T *a, S *a_h , int na, T *b,S *b_h, int nb, T *c,S *c_h)
     {
-        int ia, ib, ic;
+        int ia, ib, ic,count_of_equal=0;
         for(ia = ib = ic = 0; (ia < na) && (ib < nb); ic++)
         {
             if(a_h[ia] < b_h[ib])
@@ -781,11 +781,19 @@ namespace Ehsan {
                 c_h[ic] = a_h[ia];
                 ia++;
             }
-            else
+            else if(a_h[ia] > b_h[ib])
             {
                 c[ic] = b[ib];
                 c_h[ic] = b_h[ib];
                 ib++;
+            }
+            else
+            {
+                c[ic] = b[ib]+a[ia];
+                c_h[ic] = b_h[ib];
+                ib++;
+                ia++;
+                count_of_equal++;
             }
         }
         for(;ia < na; ia++, ic++)
@@ -798,6 +806,7 @@ namespace Ehsan {
             c[ic] = b[ib];
             c_h[ic] = b_h[ib];
         }
+        return count_of_equal;
     }
 
     template<class T, class S>
@@ -828,9 +837,9 @@ namespace Ehsan {
         (*index) = 0;
         S total_keys [this_nodes + other_nodes];
         T total_data[this_nodes + other_nodes];
-        merge(this_data,this_keys,this_nodes,other_data,other_keys,other_nodes,total_data,total_keys);
+        int count_of_equal=merge(this_data,this_keys,this_nodes,other_data,other_keys,other_nodes,total_data,total_keys);
         //treeDelete(other.root);
-        BSTNode<T,S> *newtree = createEmptyFullTree(total_keys,total_data,0,this_nodes + other_nodes-1);
+        BSTNode<T,S> *newtree = createEmptyFullTree(total_keys,total_data,0,this_nodes + other_nodes-1-count_of_equal);
         this->root = newtree;
         delete index;
     }
