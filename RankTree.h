@@ -26,7 +26,7 @@ namespace Ehsan {
         int height;
         int rank;
         int sum;
-
+        int sum_for_avg;
 
 
 
@@ -43,7 +43,7 @@ namespace Ehsan {
         ~BSTNode() = default;
 
         int getSum() {
-            if (this == nullptr) { // ?
+            if (this == nullptr) {
                 return 0;
             }
             if (this->left == nullptr && this->right == nullptr) {
@@ -54,6 +54,20 @@ namespace Ehsan {
                 return (int)data + this->left->sum;
             } else {
                 return (int)data + this->left->sum+ this->right->sum;
+            }
+        }
+        int getSumForAvg() {
+            if (this == nullptr) {
+                return 0;
+            }
+            if (this->left == nullptr && this->right == nullptr) {
+                return ((int)key)*((int)data);
+            } else if (this->left == nullptr) {
+                return ((int)key)*((int)data) + this->right->sum_for_avg;
+            } else if (this->right == nullptr) {
+                return ((int)key)*((int)data) + this->left->sum_for_avg;
+            } else {
+                return ((int)key)*((int)data) + this->left->sum_for_avg+ this->right->sum_for_avg;
             }
         }
         int getHeight() {
@@ -92,6 +106,7 @@ namespace Ehsan {
             while(node!= nullptr)
             {
                 node->sum++;
+                node->sum_for_avg+=this->key;
                 node=node->parent;
             }
         }
@@ -102,6 +117,7 @@ namespace Ehsan {
             while(node!= nullptr)
             {
                 node->sum--;
+                node->sum_for_avg-=(int)key;
                 node=node->parent;
             }
         }
@@ -175,6 +191,8 @@ namespace Ehsan {
             y->rank=y->getRank();
             x->sum=x->getSum();
             y->sum=y->getSum();
+            x->sum_for_avg=x->getSumForAvg();
+            y->sum_for_avg=y->getSumForAvg();
             return y;
 
         }
@@ -204,6 +222,8 @@ namespace Ehsan {
             x->rank=x->getRank();
             y->sum=y->getSum();
             x->sum=x->getSum();
+            y->sum_for_avg=y->getSumForAvg();
+            x->sum_for_avg=x->getSumForAvg();
             return x;
         }
 
@@ -294,7 +314,8 @@ namespace Ehsan {
             parent(nullptr),
             height(1),
             rank(1),
-            sum((int)data)
+            sum((int)data),
+            sum_for_avg((int)key*(int)data)
     {}
 
     template<class T,class S>
@@ -418,7 +439,6 @@ namespace Ehsan {
             }
             else {
                 insertInternal(node->right, key, data);
-
             }
 
         }
@@ -468,16 +488,6 @@ namespace Ehsan {
             selectSumForAvgLevelsInternal(node->right, sum-node->left->sum-node->data);
         }
     }
-
-    // template<class T,class S>
-    // int RankTree<T,S>::selectSumForAvgLevels(int sum) {
-    //     if(sum<this->root->sum)
-    //     {
-    //         return 0;
-    //     }
-    //     return selectSumMaxInternal(this->root,sum);
-    // }
-
     template<class T,class S>
     int RankTree<T,S>::selectSumForAvgLevels(int sum)
     {
@@ -656,6 +666,7 @@ namespace Ehsan {
             start->height = start->getHeight();
             start->rank=start->getRank();
             start->sum=start->getSum();
+            start->sum_for_avg=start->getSumForAvg();
             start=start->parent;
         }
     }
@@ -746,7 +757,7 @@ namespace Ehsan {
         newroot->height =newroot->getHeight();
         newroot->rank=newroot->getRank();
         newroot->sum=newroot->getSum();
-
+        newroot->sum_for_avg=newroot->getSumForAvg();
         if(newroot->right!= nullptr)
         {
             newroot->right->parent=newroot;

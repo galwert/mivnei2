@@ -112,7 +112,7 @@ void SivansGame::RemovePlayerFromGroupHelper(Player* player,Group* player_group,
 //        player_group->players_by_scale[score]->find(level)->data--;
 //        player_group->players_by_level->find(level)->data--; done in decrease function
     }
-    BSTNode<int,int> *player_node = players_by_level->find(level);
+    BSTNode<int,int> *player_node = player_group->players_by_level->find(level);
     if( (player_node != nullptr) && (level != 0) &&  (player_node->data == 0) )
     {
         player_group->players_by_level->remove(level);
@@ -372,7 +372,7 @@ StatusType SivansGame::GetPercentOfPlayersWithScoreInBounds(int GroupID, int sco
     {
         return INVALID_INPUT;
     }
-    if(higherLevel<0||score>scale||score<=0)//coudl've checked if ( lowerlevel > MAXLEVELINGAME )  but we do that below anyway
+    if(higherLevel<0||score>scale||score<=0|| lowerLevel > higherLevel )
     {
         return FAILURE;
     }
@@ -432,48 +432,111 @@ BSTNode<int,int> *SivansGame::SelectNodeWithClosestSum(BSTNode<int,int> *root, i
 }
 
 
-void SivansGame::CalculateAvgLevelsHelper(BSTNode<int,int>* root,int *sum,int *num_of_players,int m)
-{
+// void SivansGame::CalculateAvgLevelsHelper(BSTNode<int,int>* root,int *sum,int *num_of_players,int m)
+// {
     
-    if (root == nullptr)
-    {
-        return;
-    }
+//     if (root == nullptr)
+//     {
+//         return;
+//     }
 
-    CalculateAvgLevelsHelper(root->right,sum,num_of_players,m);
-    CalculateAvgLevelsHelper(root->left,sum,num_of_players,m);
+//     CalculateAvgLevelsHelper(root->right,sum,num_of_players,m);
+//     CalculateAvgLevelsHelper(root->left,sum,num_of_players,m);
 
-    (*sum) += (root->data)*(root->key);
-    (*num_of_players) += root->data;
+//     (*sum) += (root->data)*(root->key);
+//     (*num_of_players) += root->data;
     
-}
+// }
+
+// void SivansGame::RemoveExtraPlayersFromCalculation(BSTNode<int,int>* root,int *sum,int *num_of_players,int m)
+// {
+    
+//     // start from the node at leftest spot in tree
+
+//     if ((*num_of_players) < m)
+//     {
+//         return;
+//     }
+//     if (root == nullptr)
+//     {
+//         return;
+//     }
+
+
+//     (*sum) -= (root->data)*(root->key);
+//     (*num_of_players) -= (root->data);
+//     if ((*num_of_players) <= m)
+//     {
+//         (*sum) += (m - (*num_of_players))*(root->key);
+//         return;
+//     }
+//     RemoveExtraPlayersFromCalculation(root->parent,sum,num_of_players,m);
+    
+// }
 
 void SivansGame::RemoveExtraPlayersFromCalculation(BSTNode<int,int>* root,int *sum,int *num_of_players,int m)
 {
     
-    // start from the node at leftest spot in tree
-
-    if ((*num_of_players) < m)
-    {
-        return;
-    }
     if (root == nullptr)
     {
         return;
     }
-
-
-    (*sum) -= (root->data)*(root->key);
-    (*num_of_players) -= (root->data);
-    if ((*num_of_players) <= m)
-    {
-        (*sum) += (m - (*num_of_players))*(root->key);
-        return;
-    }
-    RemoveExtraPlayersFromCalculation(root->parent,sum,num_of_players,m);
     
+    if ((*num_of_players) >= m)
+    {
+        (*sum) -= ( (*num_of_players) - m)*(root->key);
+        return;
+    }    
 }
+StatusType AverageHighestPlayerLevelByGroupInternal(BSTNode<int,int> * root, int *num_of_players, int * sum)
+{
+    if(root== nullptr||*num_of_players<=0)
+    {
+        return SUCCESS;
+    }
 
+    while (*num_of_players<root->sum)
+    {
+        if(root->right== nullptr)
+        {
+            if(root->data>=*num_of_players)
+            {
+                *sum+=*num_of_players*root->key;
+            }
+            else
+            {
+                *sum+=root->data*root->key+root->left->key*(*num_of_players-root->data);
+            }
+            return SUCCESS;
+        }
+        root=root->right;
+    }
+    if(root->parent== nullptr)
+    {
+//        if(root->right!= nullptr)
+//        {
+//            *sum += root->sum_for_avg;
+//            *num_of_players -=  root->sum;
+//        }
+        //*sum += root->key*root->data;
+        //*num_of_players -= root->data;
+        *sum += root->sum_for_avg;
+        *num_of_players -=  root->sum;
+        //return AverageHighestPlayerLevelByGroupInternal(root->left,num_of_players,sum);
+        return SUCCESS;
+    }
+    root=root->parent;
+
+        if(*num_of_players<=root->data + root->right->sum)
+        {
+            *sum += root->right->sum_for_avg +root->key*(*num_of_players-root->right->sum);
+            *num_of_players = 0;
+            return SUCCESS;
+        }
+        *sum += root->right->sum_for_avg + root->data * root->key;
+        *num_of_players -= root->data + root->right->sum;
+        return AverageHighestPlayerLevelByGroupInternal(root->left,num_of_players,sum);
+}
 StatusType SivansGame::AverageHighestPlayerLevelByGroup(int GroupID, int m, double * level)
 {   
     //do the following route on the rank tree : right,root,left (anti inorder)
@@ -497,45 +560,46 @@ StatusType SivansGame::AverageHighestPlayerLevelByGroup(int GroupID, int m, doub
     
 
     int *num_of_players = new int();
+    *num_of_players=m;
     int *sum = new int();
-    BSTNode<int,int>* most_right = nullptr;
-    BSTNode<int,int>* closest = nullptr;
-    BSTNode<int,int>* closest_leftest = nullptr;
+    *sum =0;
     if (GroupID == 0)
     {
-        most_right = RankTree<int,int>::getMostRightNode(this->players_by_level->root);
-        closest = SelectNodeWithClosestSum(most_right,m);
-        closest_leftest = RankTree<int,int>::getLeftestNode(closest);
-        CalculateAvgLevelsHelper(closest,sum,num_of_players,m);
-        RemoveExtraPlayersFromCalculation(closest_leftest,sum,num_of_players,m);
-        if ((*num_of_players) < m)
+        if(this->players_by_level->root== nullptr)
         {
-            (*num_of_players) += this->level_zero_level;
+            *sum=0;
         }
-        
+        else
+        {
+            if (this->players_by_level->root->sum < m)
+            {
+                if(this->players_by_level->root!= nullptr) {
+                    *sum = this->players_by_level->root->sum_for_avg;
+                }
+            }
+            else {
+                AverageHighestPlayerLevelByGroupInternal(this->players_by_level->root, num_of_players, sum);
+            }
+        }
+
+
         
     }
-    else // 1 <= GroupID < k
+    else // 1 <= GroupID <= k
     {
-        most_right = RankTree<int,int>::getMostRightNode(group_to_find->players_by_level->root);
-        closest = SelectNodeWithClosestSum(most_right,m);
-//        closest = SelectNodeWithClosestSum(group_to_find->players_by_level->root,m);
-        closest_leftest = RankTree<int,int>::getLeftestNode(closest);
-        CalculateAvgLevelsHelper(closest,sum,num_of_players,m);
-        RemoveExtraPlayersFromCalculation(closest_leftest,sum,num_of_players,m);
-        if ((*num_of_players) < m)
-        {
-            (*num_of_players) += group_to_find->level_zero_level;
+        if (group_to_find->players_by_level->root == nullptr) {
+            *sum = 0;
+        } else {
+            if (group_to_find->players_by_level->root->sum < m) {
+                if (group_to_find->players_by_level->root != nullptr) {
+                    *sum = group_to_find->players_by_level->root->sum_for_avg;
+                }
+            } else {
+                AverageHighestPlayerLevelByGroupInternal(group_to_find->players_by_level->root, num_of_players, sum);
+            }
         }
-        
     }
 
-    if ((*num_of_players) < m)
-    {
-        delete sum;
-        delete num_of_players;
-        return FAILURE;
-    }
 
     (*level) = (double)(*sum)/(double)m;
     delete sum;

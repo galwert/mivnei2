@@ -34,7 +34,7 @@ void print2DUtil(BSTNode<int,int> *root, int space)
     std::cout<<std::endl;
     for (int i = 10; i < space; i++)
         std::cout<<" ";
-    std::cout<<root->data<<"  "<<root->sum<<"\n";
+    std::cout<<root->data<<"  " <<root->key<<"  "<<root->sum_for_avg<<"\n";
 
     // Process left child
     print2DUtil(root->left, space);
@@ -551,12 +551,13 @@ int main(){
         shuffle (vector.begin(), vector.end(), std::default_random_engine(seed));
         for (std::vector<int>::iterator it = vector.begin() ; it != vector.end(); it++){
             tree.insert(*it,*it);
+            print2D(tree.root);
 
         }
         //shuffle (vector.begin(), vector.end(), std::default_random_engine(seed));
         for (std::vector<int>::iterator it = vector.begin() ; it != vector.end(); ++it){
             print2D(tree.root);
-            std::cout<<*it<<"   "<< tree.selectSumForScoreInBoundMin(*it);
+            tree.find(*it)->increaseAllNodesInTrack();
 
 
         }
