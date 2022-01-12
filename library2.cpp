@@ -87,5 +87,6 @@ void Quit(void** DS)
     {
         return;
     }
-    SivansGame::QuitGame(static_cast<SivansGame*>(*DS));
+    delete static_cast<SivansGame*>(*DS);
+    *DS =nullptr;
 }

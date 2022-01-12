@@ -109,7 +109,7 @@ namespace Ehsan {
             {
 
                 ListNode<T> * node;
-                List<T>** new_array=new List<T>*[2*size];
+                List<T>** new_array=new List<T>*[2*size]();//needed? - saleh
                for(int i=0;i<size;i++)
                {
                    if(array[i]!= nullptr) {

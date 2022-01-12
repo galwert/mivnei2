@@ -325,7 +325,7 @@ StatusType SivansGame::ChangePlayerIDScore(int PlayerID, int NewScore)
     
     UpdateScoreInSivan(player_to_find,player_to_find->score,NewScore); // correct?
     UpdateScoreInGroup(player_to_find,group_to_find,player_to_find->score,NewScore); // correct?
-   player_to_find->score=NewScore;
+    player_to_find->score=NewScore;
     return SUCCESS;
 }
 
@@ -343,13 +343,13 @@ int SivansGame::GetNumberOfPlayersWithScoreInBounds(RankTree<int,int>** players_
     }
     lower_level_sum += players_by_scale[score]->selectSumForScoreInBoundMin(lowerlevel);
     higher_level_sum += players_by_scale[score]->selectSumForScoreInBoundMax(higherlevel);
-    return (level_zero_scale[score]+players_by_scale[score]->root->sum-higher_level_sum-lower_level_sum);
+    return (level_zero_scale[score] + (players_by_scale[score]->root->sum) - (higher_level_sum) - lower_level_sum);
     
 }
 int SivansGame::GetNumberOfPlayersWithLevelsInBounds(RankTree<int,int>* levels_tree,int level_zero_level, int lowerlevel, int higherlevel)
 {
-    int lower_level_sum=0;
-    int higher_level_sum =0;
+    int lower_level_sum = 0;
+    int higher_level_sum = 0;
     if (lowerlevel > 0)
     {
         lower_level_sum = level_zero_level;
@@ -360,7 +360,7 @@ int SivansGame::GetNumberOfPlayersWithLevelsInBounds(RankTree<int,int>* levels_t
     }
     lower_level_sum += levels_tree->selectSumForScoreInBoundMin(lowerlevel);
     higher_level_sum += levels_tree->selectSumForScoreInBoundMax(higherlevel);
-    return (level_zero_level+levels_tree->root->sum-higher_level_sum-lower_level_sum);
+    return (level_zero_level + (levels_tree->root->sum )- (higher_level_sum) - lower_level_sum);
 
 }
 
@@ -368,11 +368,11 @@ int SivansGame::GetNumberOfPlayersWithLevelsInBounds(RankTree<int,int>* levels_t
 StatusType SivansGame::GetPercentOfPlayersWithScoreInBounds(int GroupID, int score, int lowerLevel, 
                                                                             int higherLevel,double * players)
 {
-    if (GroupID < 0 || GroupID > this->groups->numberOfElements || players == nullptr||score>scale||score<=0)
+    if (GroupID < 0 || GroupID > this->groups->numberOfElements || players == nullptr)
     {
         return INVALID_INPUT;
     }
-    if(higherLevel<0)
+    if(higherLevel<0||score>scale||score<=0)//coudl've checked if ( lowerlevel > MAXLEVELINGAME )  but we do that below anyway
     {
         return FAILURE;
     }
@@ -412,49 +412,70 @@ StatusType SivansGame::GetPercentOfPlayersWithScoreInBounds(int GroupID, int sco
     
 }
 
-void SivansGame::AntiInOrderInTree(BSTNode<int,int>* root,BSTNode<int,int>* leftest_node,int level_zero,
-                                                                            int *sum,int *num_of_players,int m)
+
+BSTNode<int,int> *SivansGame::SelectNodeWithClosestSum(BSTNode<int,int> *root, int m)
 {
+    //start from the most right node in the tree and go up from there
 
-    // note that the lowest possible level is 0 hence if we assume that it's in the tree it's always to the left of some node
-    // However the way we designed the tree, level zero is outside the tree and therefore if we arrive at level 1 at somepoint
-    // we have to check level 0 manually to the left of it.
-
-    if (root == leftest_node && ( (*num_of_players) < m) )
-    {   
-        (*num_of_players) += level_zero;
-        if ( (*num_of_players) >= m)
-        {
-            return; // level zero doesnt affect the sum.
-        }
+    if ( root == nullptr || root->parent == nullptr)
+    {
+        // in case the tree is empty or we got to the root.
+        return root;
     }
+
+    if (root->sum >= m)
+    {
+        return root;
+    }
+    
+    SelectNodeWithClosestSum(root->parent,m);
+}
+
+
+void SivansGame::CalculateAvgLevelsHelper(BSTNode<int,int>* root,int *sum,int *num_of_players,int m)
+{
     
     if (root == nullptr)
     {
         return;
     }
+
+    CalculateAvgLevelsHelper(root->right,sum,num_of_players,m);
+    CalculateAvgLevelsHelper(root->left,sum,num_of_players,m);
+
+    (*sum) += (root->data)*(root->key);
+    (*num_of_players) += root->data;
     
+}
 
-    AntiInOrderInTree(root->right,leftest_node,level_zero,sum,num_of_players,m);
-    (*sum) += root->data * (root->key);// number_of_players_in_level * level
-    (*num_of_players) = root->data;
-    if ( (*num_of_players) >= m)
+void SivansGame::RemoveExtraPlayersFromCalculation(BSTNode<int,int>* root,int *sum,int *num_of_players,int m)
+{
+    
+    // start from the node at leftest spot in tree
+
+    if ((*num_of_players) < m)
     {
-        (*sum) -= ( (*num_of_players) - (root->data) ) * (root->key); // remove the extra players that we added    
-        return;        
+        return;
+    }
+    if (root == nullptr)
+    {
+        return;
     }
 
-    AntiInOrderInTree(root->left,leftest_node,level_zero,sum,num_of_players,m);
-    if ( (*num_of_players) >= m)
-    {
-        (*sum) -= ( (*num_of_players) - (root->data) ) * (root->key); // remove the extra players that we added   
-        return;         
-    }
 
+    (*sum) -= (root->data)*(root->key);
+    (*num_of_players) -= (root->data);
+    if ((*num_of_players) <= m)
+    {
+        (*sum) += (m - (*num_of_players))*(root->key);
+        return;
+    }
+    RemoveExtraPlayersFromCalculation(root->parent,sum,num_of_players,m);
+    
 }
 
 StatusType SivansGame::AverageHighestPlayerLevelByGroup(int GroupID, int m, double * level)
-{
+{   
     //do the following route on the rank tree : right,root,left (anti inorder)
     //it should provide the m highest levels in the tree
     if (GroupID < 0 || m <= 0 || GroupID > this->groups->numberOfElements || level == nullptr)
@@ -462,8 +483,13 @@ StatusType SivansGame::AverageHighestPlayerLevelByGroup(int GroupID, int m, doub
         return INVALID_INPUT;
     }
 
-    Group* group_to_find = FindGroup(GroupID);
-    if ( (m > this->num_of_players) || ( (GroupID > 0) && (m > group_to_find->num_of_players) ) )
+    Group* group_to_find = nullptr;
+    if (GroupID > 0)
+    {
+        group_to_find = FindGroup(GroupID);
+    }
+    
+    if ( (m > this->num_of_players) || ( (GroupID > 0) && (GroupID <= this->num_of_groups) && (m > group_to_find->num_of_players) ) )
     {
         // if m>this->num_of_players then it's definitely bigger than the number of players in any given group!
         return FAILURE;
@@ -472,17 +498,43 @@ StatusType SivansGame::AverageHighestPlayerLevelByGroup(int GroupID, int m, doub
 
     int *num_of_players = new int();
     int *sum = new int();
-    BSTNode<int,int>* leftest_node = RankTree<int,int>::getLeftestNode(this->players_by_level->root);
-    //should probably check the case in which leftest_node in null
+    BSTNode<int,int>* most_right = nullptr;
+    BSTNode<int,int>* closest = nullptr;
+    BSTNode<int,int>* closest_leftest = nullptr;
     if (GroupID == 0)
     {
-        //do the anti inorder in Sivans
-        AntiInOrderInTree(this->players_by_level->root,leftest_node,this->level_zero_level,sum,num_of_players,m);
+        most_right = RankTree<int,int>::getMostRightNode(this->players_by_level->root);
+        closest = SelectNodeWithClosestSum(most_right,m);
+        closest_leftest = RankTree<int,int>::getLeftestNode(closest);
+        CalculateAvgLevelsHelper(closest,sum,num_of_players,m);
+        RemoveExtraPlayersFromCalculation(closest_leftest,sum,num_of_players,m);
+        if ((*num_of_players) < m)
+        {
+            (*num_of_players) += this->level_zero_level;
+        }
+        
+        
     }
     else // 1 <= GroupID < k
     {
-        // do the anti inorder in Group
-        AntiInOrderInTree(group_to_find->players_by_level->root,leftest_node,group_to_find->level_zero_level,sum,num_of_players,m);
+        most_right = RankTree<int,int>::getMostRightNode(group_to_find->players_by_level->root);
+        closest = SelectNodeWithClosestSum(most_right,m);
+//        closest = SelectNodeWithClosestSum(group_to_find->players_by_level->root,m);
+        closest_leftest = RankTree<int,int>::getLeftestNode(closest);
+        CalculateAvgLevelsHelper(closest,sum,num_of_players,m);
+        RemoveExtraPlayersFromCalculation(closest_leftest,sum,num_of_players,m);
+        if ((*num_of_players) < m)
+        {
+            (*num_of_players) += group_to_find->level_zero_level;
+        }
+        
+    }
+
+    if ((*num_of_players) < m)
+    {
+        delete sum;
+        delete num_of_players;
+        return FAILURE;
     }
 
     (*level) = (double)(*sum)/(double)m;
@@ -490,10 +542,4 @@ StatusType SivansGame::AverageHighestPlayerLevelByGroup(int GroupID, int m, doub
     delete num_of_players;
 
     return SUCCESS;
-}
-
-void SivansGame::QuitGame(SivansGame* game)
-{
-
-    game= nullptr;
 }

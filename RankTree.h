@@ -459,7 +459,7 @@ namespace Ehsan {
 
     template<class T,class S>
     int selectSumForAvgLevelsInternal(BSTNode<T,S> *node,int sum) {
-        if (node->left->sum <= sum&&node->left->sum+node->data >= sum ) {
+        if (node->left->sum <= sum && (node->left->sum) + node->data >= sum ) {
             return node->right->sum;
         }
         if (node->left->sum > sum) {
@@ -468,14 +468,28 @@ namespace Ehsan {
             selectSumForAvgLevelsInternal(node->right, sum-node->left->sum-node->data);
         }
     }
+
+    // template<class T,class S>
+    // int RankTree<T,S>::selectSumForAvgLevels(int sum) {
+    //     if(sum<this->root->sum)
+    //     {
+    //         return 0;
+    //     }
+    //     return selectSumMaxInternal(this->root,sum);
+    // }
+
     template<class T,class S>
-    int RankTree<T,S>::selectSumForAvgLevels(int sum) {
-        if(sum<this->root->sum)
+    int RankTree<T,S>::selectSumForAvgLevels(int sum)
+    {
+        if (sum > this->root->sum)
         {
-            return 0;
+            return this->root->sum;
         }
-        return selectSumMaxInternal(this->root,sum);
+        return selectSumForAvgLevelsInternal(this->root,sum);
+        
     }
+
+
     template<class T,class S>
     int selectSumForScoreInBoundMaxInternal(BSTNode<T,S> *node,int rank) {
       int sum=node->sum;
@@ -544,13 +558,13 @@ namespace Ehsan {
             {
                 if(node->left!= nullptr)
                 {
-                    return sum+node->left->sum;
+                    return (sum + node->left->sum);
                 }
                 return sum;
             }
-            else if(node->key<level)
+            else if(node->key < level)
             {
-                if(node->left!= nullptr)
+                if(node->left != nullptr)
                 {
                     sum+=node->data+node->left->sum;
                 }

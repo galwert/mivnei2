@@ -36,7 +36,9 @@ namespace Ehsan
         void AddPlayerToNewLevelInGroup(Player* player, Group* group);
         void UpdateScoreInSivan(Player* player,int OldScore, int NewScore);
         void UpdateScoreInGroup(Player* player,Group* group,int OldScore, int NewScore);
-        void AntiInOrderInTree(BSTNode<int,int>* root,BSTNode<int,int>* leftest_node,int level_zero,int *sum,int *num_of_players, int m);
+        BSTNode<int,int>* SelectNodeWithClosestSum(BSTNode<int,int> *root, int m);
+        void CalculateAvgLevelsHelper(BSTNode<int,int>* root,int *sum,int *num_of_players,int m);
+        void RemoveExtraPlayersFromCalculation(BSTNode<int,int>* root,int *sum,int *num_of_players,int m);
         int GetNumberOfPlayersWithScoreInBounds(RankTree<int,int>** players_by_scale,int *level_zero_scale,int score, int lowerlevel, int higherlevel);
         int GetTotalNumberOfPlayersBounds(RankTree<int,int> *players_by_level, int lowerlevel, int higherlevel);
         StatusType GetPercentOfPlayersWithScoreInBoundsHelper(RankTree<int,int>** players_by_scale,RankTree<int,int> *players_level,
@@ -50,47 +52,13 @@ namespace Ehsan
         StatusType GetPercentOfPlayersWithScoreInBounds(int GroupID, int score, int lowerLevel, int higherLevel,
                                                                                                  double * players);
         StatusType AverageHighestPlayerLevelByGroup(int GroupID, int m, double * level);
-        // StatusType GetPlayersBound(int GroupID, int score, int m,
-        //                                         int * LowerBoundPlayers, int * HigherBoundPlayers);
-        static void QuitGame(SivansGame* game);
-
-
         int GetNumberOfPlayersWithLevelsInBounds(RankTree<int, int> *levels_tree, int level_zero_level, int lowerlevel,
                                                  int higherlevel);
     };
 
-    // SivansGame::SivansGame(int num_of_groups, int scale):
-    // num_of_groups(num_of_groups),
-    // scale(scale),
-    // num_of_players(0),
-    // groups( new UnionFind<Group>(num_of_groups,scale) ),
-    // players_by_scale(new RankTree<int,int>*[scale+1]),
-    // players_by_level(),
-    // level_zero_level(0),
-    // level_zero_scale( new int[scale+1]),
-    // players(new DynamicArray<Player>(ARRAY_SIZE,BALANCE_FACTOR))
-    // {
-    //     for (int i = 1; i <= scale; i++) {
-    //         level_zero_scale[i] = 0;
-    //     }
-
-    // }
-    // SivansGame::~SivansGame()
-    // {
-    //     for(int i=1;i<=scale;i++)
-    //     {
-    //         delete players_by_scale[i];
-    //     }
-    //     delete[] level_zero_scale;
-    //     delete groups; 
-    //     delete players_by_level;
-    //     delete players;
-    // }
-
-    
-
 
 } // namespace Ehsan
 
-
+    // StatusType GetPlayersBound(int GroupID, int score, int m,
+    //                                         int * LowerBoundPlayers, int * HigherBoundPlayers);
 #endif
