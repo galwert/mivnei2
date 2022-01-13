@@ -157,6 +157,28 @@ namespace Ehsan {
         }
        StatusType remove(int id)
         {
+            if(this->size>this->node_count)
+            {
+                ListNode<T> * node;
+                List<T>** new_array=new List<T>*[size/2]();
+                for(int i=0;i<size;i++)
+                {
+                    if(array[i]!= nullptr) {
+                        node = array[i]->head;
+                        while (node != nullptr) {
+                            if (new_array[node->id % (size/2)] == nullptr) {
+                                new_array[node->id % (size/2)] = new List<T>();
+                            }
+                            new_array[node->id % (size/2)]->insert(node->data, node->id);
+                            node = node->next;
+                        }
+                    }
+                }
+                delete array;
+                array=new_array;
+                size/=2;
+
+            }
             if(find(id) == nullptr)
             {
                 return FAILURE;
