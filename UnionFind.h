@@ -36,14 +36,14 @@ namespace Ehsan
     numberOfElements(numberOfElements),
     size(new int[numberOfElements + 1]()),
     parent(new int[numberOfElements + 1]()),
-    data(new T*[numberOfElements+1]()),
+    data(new T*[numberOfElements+1]),
     scale(scale)
     {
-        for (int i = 0; i < (numberOfElements+1) ; i++)
+        for (int i = 1; i < (numberOfElements+1) ; i++)
         {
             parent[i] = i;
             size[i] = 0;
-             data[i]=new T(scale);
+            data[i]=new T(scale);
         }
     }
     
@@ -52,10 +52,11 @@ namespace Ehsan
     {
         delete[] size;
         delete[] parent;
-//         for (int i = 0; i < (numberOfElements+1) ; i++)
-//         {
-//             delete data[i];
-//         }
+         for (int i = 1; i < (numberOfElements+1) ; i++)
+         {
+             if(data[i]!=nullptr)
+             delete data[i];
+         }
         delete[] data;
     }
     
@@ -112,7 +113,8 @@ namespace Ehsan
          */
         parent[to_delete_index] =  to_grow_index;
         increasesize(to_grow_index,size[to_delete_index]);
-        // data[to_delete] = nullptr;
+         delete data[to_delete_index];
+        data[to_delete_index] = nullptr;
         return;
     }
 

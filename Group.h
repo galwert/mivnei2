@@ -25,24 +25,23 @@ namespace Ehsan
         explicit Group(int scale = 200):
         num_of_players(0),//initializes number of players
         scale(scale),
-        players_by_scale(new RankTree<int,int>*[scale+1]()),
+        players_by_scale(new RankTree<int,int>*[scale+1]),
         players_by_level(new RankTree<int,int>()),
         level_zero_level(0),
         level_zero_scale( new int[scale+1])
         {
             for(int i=1;i<=scale;i++)
             {
-                players_by_scale[i] = new RankTree<int,int>();// needed?
+                players_by_scale[i] = new RankTree<int,int>();
                 level_zero_scale[i]=0;
             }
-            level_zero_level=0;
 
         }
         ~Group()
         {
             for(int i=1;i<=scale;i++)
             {
-              delete players_by_scale[i];
+                delete players_by_scale[i];
             }
             delete[] players_by_scale;
             delete[] level_zero_scale;
@@ -51,7 +50,6 @@ namespace Ehsan
 
         void increaseNumberOfPlayers(int increase = 1);
         void decreaseNumberOfPlayers(int decrease = -1);
-        BSTNode<int,int>& findLevelNode(int level);
 
         // friend bool operator<(const Group& first_group,const Group& second_group);
         // friend bool operator>(const Group& first_group,const Group& second_group);

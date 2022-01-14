@@ -21,6 +21,14 @@ namespace Ehsan
         level(level),
         score(score)
         {}
+        Player(Player * player):
+                original_group(player->original_group),
+                player_id(player->player_id),
+                level(player->level),
+                score(player->score)
+        {
+
+        }
         ~Player() = default;
         Player& operator=(const Player& player) = default;
 

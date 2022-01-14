@@ -15,7 +15,7 @@ namespace Ehsan {
         ListNode *next;
         int id;
 
-        ListNode(T data,int id):
+        ListNode(T* data,int id):
         data(data),
         next(nullptr),
         id(id)
@@ -26,6 +26,10 @@ namespace Ehsan {
         next(next),
         id(id)
         {}
+        ~ListNode()
+        {
+            delete data;
+        }
     };//---------------ListNode END-----------------------------
 
 
@@ -39,8 +43,8 @@ namespace Ehsan {
 
         void insert(T* data,int id)
         {
+            this->head = new ListNode<T>(data,this->head,id);
 
-            this->head = new ListNode<T>(data,head,id);
         }
 
         StatusType remove(int id)
@@ -100,16 +104,36 @@ namespace Ehsan {
                 {
             array = new List<T>*[size]();
         }
-
+        void ClearArray()
+        {
+            ListNode<T> * node,*next;
+            for(int i=0;i<size;i++)
+            {
+                if(array[i]!= nullptr) {
+                    node = array[i]->head;
+                    while (node != nullptr) {
+                        next=node->next;
+                        //delete node->data;
+                        delete node;
+                        node = next;
+                    }
+                    delete array[i];
+                }
+            }
+            delete[] array;
+        }
+        ~DynamicArray()
+        {
+            this->ClearArray();
+        }
         DynamicArray() = delete;
 
         StatusType insert(int id,T* data)
         {
             if((this->balance_factor*this->size)<this->node_count)
             {
-
                 ListNode<T> * node;
-                List<T>** new_array=new List<T>*[2*size]();//needed? - saleh
+                List<T>** new_array=new List<T>*[2*size]();
                for(int i=0;i<size;i++)
                {
                    if(array[i]!= nullptr) {
@@ -118,29 +142,21 @@ namespace Ehsan {
                            if (new_array[node->id % (2 * size)] == nullptr) {
                                new_array[node->id % (2 * size)] = new List<T>();
                            }
-                           new_array[node->id % (2 * size)]->insert(node->data, node->id);
+                           new_array[node->id % (2 * size)]->insert(new T(node->data), node->id);
                            node = node->next;
                        }
                    }
                }
-                delete array;
+                this->ClearArray();
                 array=new_array;
                 size*=2;
-
             }
 
             if(array[id%size]== nullptr)
             {
                 array[id%size] = new List<T>();
             }
-            if(array[id%size]->find(id) == nullptr)
-            {
-                array[id%size]->insert(data,id);
-            }
-            else
-            {
-                return FAILURE;
-            }
+            array[id%size]->insert(data,id);
             node_count++;
             return SUCCESS;
         }
@@ -157,6 +173,10 @@ namespace Ehsan {
         }
        StatusType remove(int id)
         {
+            if(find(id) != nullptr)
+            {
+                return FAILURE;
+            }
             if(this->size>this->node_count)
             {
                 ListNode<T> * node;
@@ -174,23 +194,14 @@ namespace Ehsan {
                         }
                     }
                 }
-                delete array;
+                this->ClearArray();
                 array=new_array;
                 size/=2;
 
             }
-            if(find(id) == nullptr)
-            {
-                return FAILURE;
-            }
-            else
-            {
                 node_count--;
                 array[id%size]->remove(id);
                 return SUCCESS;
-            }
-            //should never get here
-            return SUCCESS;
         }
     };
 

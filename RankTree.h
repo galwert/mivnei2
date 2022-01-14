@@ -280,10 +280,6 @@ namespace Ehsan {
 
         int FindInBoundMax(S key);
 
-        int selectSumMin(int sum);
-
-        int selectSumMax(int sum);
-
         int selectSumForAvgLevels(int sum);
 
         int selectSumForScoreInBoundMax(int level);
@@ -405,6 +401,7 @@ namespace Ehsan {
     template<class T,class S>
     RankTree<T,S>::~RankTree() {
         treeDelete(this->root);
+//        delete this->root;
     }
 
     template<class T,class S>
@@ -477,27 +474,6 @@ namespace Ehsan {
         return selectInternal(this->root,rank);
     }
 
-    template<class T,class S>
-    int selectSumForAvgLevelsInternal(BSTNode<T,S> *node,int sum) {
-        if (node->left->sum <= sum && (node->left->sum) + node->data >= sum ) {
-            return node->right->sum;
-        }
-        if (node->left->sum > sum) {
-            selectSumForAvgLevelsInternal(node->left, sum);
-        } else {
-            selectSumForAvgLevelsInternal(node->right, sum-node->left->sum-node->data);
-        }
-    }
-    template<class T,class S>
-    int RankTree<T,S>::selectSumForAvgLevels(int sum)
-    {
-        if (sum > this->root->sum)
-        {
-            return this->root->sum;
-        }
-        return selectSumForAvgLevelsInternal(this->root,sum);
-        
-    }
 
 
     template<class T,class S>
@@ -624,8 +600,7 @@ namespace Ehsan {
     BSTNode<T,S> *RankTree<T,S>::insert(S key, T data) {
 
         if (this->root == nullptr) {
-            BSTNode<T,S> *newnode= new BSTNode<T,S>(key, data);
-            this->root=newnode;
+            this->root= new BSTNode<T,S>(key, data);
             return this->root;
         }
         insertInternal(this->root, key, data);
@@ -823,6 +798,7 @@ namespace Ehsan {
             if(other_nodes==1)
             {
                 this->root=other.root;
+                other.root= nullptr;
             }
             return;
         }
@@ -839,8 +815,9 @@ namespace Ehsan {
         T total_data[this_nodes + other_nodes];
         int count_of_equal=merge(this_data,this_keys,this_nodes,other_data,other_keys,other_nodes,total_data,total_keys);
         //treeDelete(other.root);
-        BSTNode<T,S> *newtree = createEmptyFullTree(total_keys,total_data,0,this_nodes + other_nodes-1-count_of_equal);
-        this->root = newtree;
+        treeDelete(this->root);
+        this->root =createEmptyFullTree(total_keys,total_data,0,this_nodes + other_nodes-1-count_of_equal);
+
         delete index;
     }
 

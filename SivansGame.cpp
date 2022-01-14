@@ -23,8 +23,11 @@ SivansGame::~SivansGame()
 {
     for(int i=1;i<=scale;i++)
     {
-        delete players_by_scale[i];
+        if(players_by_scale[i]!= nullptr) {
+           delete players_by_scale[i];
+        }
     }
+    delete[] players_by_scale;
     delete[] level_zero_scale;
     delete groups;
     delete players_by_level;
@@ -85,11 +88,12 @@ StatusType SivansGame::AddPlayer(int PlayerID, int GroupID, int score) {
         return INVALID_INPUT;
     }
     // checking if the players already exists
-    if(this->players->insert(PlayerID, new Player(GroupID,PlayerID,0,score))!=SUCCESS)
+    if(this->players->find(PlayerID)!= nullptr)
     {
         return FAILURE;
     }
-
+    Player* player =new Player(GroupID,PlayerID,0,score);
+    this->players->insert(PlayerID,player);
     Group* group_to_find = FindGroup(GroupID);
     AddPlayerHelper(PlayerID,group_to_find,GroupID,score);
     return SUCCESS;
