@@ -173,7 +173,7 @@ namespace Ehsan {
         }
        StatusType remove(int id)
         {
-            if(find(id) != nullptr)
+            if(find(id) == nullptr)
             {
                 return FAILURE;
             }
@@ -189,7 +189,7 @@ namespace Ehsan {
                             if (new_array[node->id % (size/2)] == nullptr) {
                                 new_array[node->id % (size/2)] = new List<T>();
                             }
-                            new_array[node->id % (size/2)]->insert(node->data, node->id);
+                            new_array[node->id % (size/2)]->insert(new T(node->data), node->id);
                             node = node->next;
                         }
                     }
